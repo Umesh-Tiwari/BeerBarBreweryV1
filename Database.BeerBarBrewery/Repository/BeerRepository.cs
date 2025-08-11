@@ -72,15 +72,10 @@ namespace Database.BeerBarBrewery.Repository
         /// <param name="minAbv">Minimum ABV value (inclusive).</param>
         /// <param name="maxAbv">Maximum ABV value (inclusive).</param>
         /// <returns>A collection of beers matching the specified ABV range.</returns>
-        public async Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(double minAbv, double maxAbv)
+        public async Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(decimal minAbv, decimal maxAbv)
         {
-            // Convert to decimal to match the PercentageAlcoholByVolume type
-            decimal min = Convert.ToDecimal(minAbv);
-            decimal max = Convert.ToDecimal(maxAbv);
-
-            // Query beers with ABV within the specified range
             return await _context.Beers
-                .Where(b => b.PercentageAlcoholByVolume >= min && b.PercentageAlcoholByVolume <= max)
+                .Where(b => b.PercentageAlcoholByVolume >= minAbv && b.PercentageAlcoholByVolume <= maxAbv)
                 .ToListAsync();
         }
 

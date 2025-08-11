@@ -44,7 +44,6 @@ namespace BeerBarBrewery.Controllers
         /// - A NotFound response if no brewery records exist.
         /// </returns>
         [HttpGet]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BreweryResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BreweryResponse>>> GetAllBreweries()
@@ -61,7 +60,6 @@ namespace BeerBarBrewery.Controllers
         /// - A NotFound response if no brewery or beer records exist.
         /// </returns>
         [HttpGet("beer")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BreweryWithBeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BreweryWithBeerResponse>>> GetAllBreweriesWithBeer()
@@ -80,7 +78,6 @@ namespace BeerBarBrewery.Controllers
         /// or return NotFound response(ErrorResponse) when there are no records present 
         /// or will return bad request if id is invalid. Valid id should be greater than 0 </returns>
         [HttpGet("{id}")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(BreweryResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -103,7 +100,6 @@ namespace BeerBarBrewery.Controllers
         /// - A NotFound response if no brewery record is found for the specified ID.
         /// </returns>
         [HttpGet("{breweryId}/beer")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]

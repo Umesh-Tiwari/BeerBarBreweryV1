@@ -41,7 +41,7 @@ namespace Business.BeerBarBrewery.Process.Interface
         /// <param name="minAbv">Minimum ABV (greater than or equal to).</param>
         /// <param name="maxAbv">Maximum ABV (less than or equal to).</param>
         /// <returns>List of beers within the given ABV range.</returns>
-        Task<IEnumerable<BeerModel>> GetBeersByAlcoholVolumeRange(double minAbv, double maxAbv);
+        Task<IEnumerable<BeerModel>> GetBeersByAlcoholVolumeRange(decimal minAbv, decimal maxAbv);
 
         /// <summary>
         /// Deletes a beer identified by its ID.

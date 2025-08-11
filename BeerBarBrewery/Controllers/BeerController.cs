@@ -42,7 +42,6 @@ namespace BeerBarBrewery.Controllers
         /// or a NotFound response if no records exist.
         /// </returns>
         [HttpGet]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BeerResponse>>> GetAllBeers()
@@ -66,7 +65,6 @@ namespace BeerBarBrewery.Controllers
         /// - A BadRequest response if the ID is invalid (i.e., less than or equal to 0).
         /// </returns>
         [HttpGet("{id}")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(BeerResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -97,11 +95,10 @@ namespace BeerBarBrewery.Controllers
         /// - A NotFound response if no beers are found within the specified ABV range.
         /// </returns>
         [HttpGet("BeerByRange")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<BeerResponse>>> GetBeersByAlcoholVolumeRange(double gtAlcoholByVolume, double ltAlcoholByVolume)
+        public async Task<ActionResult<IEnumerable<BeerResponse>>> GetBeersByAlcoholVolumeRange(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
         {
             if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)
                 return BadRequest(ErrorResponse("Alcohol content values must be greater than or equal to 0.",StatusCodes.Status400BadRequest));

@@ -90,7 +90,7 @@ namespace Business.BeerBarBrewery.Process
         /// <param name="minAbv">Minimum ABV (inclusive).</param>
         /// <param name="maxAbv">Maximum ABV (inclusive).</param>
         /// <returns>List of beers matching the ABV range.</returns>
-        public async Task<IEnumerable<BeerModel>> GetBeersByAlcoholVolumeRange(double minAbv, double maxAbv)
+        public async Task<IEnumerable<BeerModel>> GetBeersByAlcoholVolumeRange(decimal minAbv, decimal maxAbv)
         {
             var beerEntities = await _beerRepository.GetBeersByAlcoholVolumeRangeAsync(minAbv, maxAbv);
             if (beerEntities == null)

@@ -21,10 +21,10 @@
         /// </summary>
         public double PercentageAlcoholByVolume { get; set; }
 
-        /// <summary>
-        /// Optional ID of the brewery that produces the beer. Null if not associated.
-        /// </summary>
-        public int? BreweryId { get; set; }
+        ///// <summary>
+        ///// Optional ID of the brewery that produces the beer. Null if not associated.
+        ///// </summary>
+        //public int? BreweryId { get; set; }
     }
 
 }

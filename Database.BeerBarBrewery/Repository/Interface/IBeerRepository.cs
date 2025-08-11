@@ -51,6 +51,6 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// <param name="minAbv">Minimum ABV value (inclusive).</param>
         /// <param name="maxAbv">Maximum ABV value (inclusive).</param>
         /// <returns>A collection of beers matching the ABV range.</returns>
-        Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(double minAbv, double maxAbv);
+        Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(decimal minAbv, decimal maxAbv);
     }
 }

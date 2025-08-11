@@ -19,7 +19,7 @@ namespace Model.BeerBarBrewery
         /// Alcohol content of the beer represented as a percentage (ABV - Alcohol by Volume).
         /// </summary>
         [Range(0, 100, ErrorMessage = "Alcohol percentage must be between 0 and 100.")]
-        public double PercentageAlcoholByVolume { get; set; }
+        public decimal PercentageAlcoholByVolume { get; set; }
 
         /// <summary>
         /// Optional ID of the brewery that produces this beer.
