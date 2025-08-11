@@ -1,4 +1,3 @@
-using AutoMapper;
 using BeerBarBrewery.Mapping;
 using BeerBarBrewery.Middleware;
 using Business.BeerBarBrewery.Mapping;
@@ -10,8 +9,7 @@ using Database.BeerBarBrewery.Repository.Interface;
 using Database.BeerBarBrewery.UnitOfWork;
 using Database.BeerBarBrewery.UnitOfWork.Interface;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +22,12 @@ builder.Services.AddControllers();
 
 // Register Swagger/OpenAPI for API documentation
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 // Register Entity Framework Core with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

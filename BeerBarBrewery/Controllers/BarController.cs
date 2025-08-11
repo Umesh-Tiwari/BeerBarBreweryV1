@@ -35,10 +35,14 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// The GetAllBars method will return all the bar records. In case there is no record it will return not found with error message.
+        /// Retrieves all bar records. Returns a NotFound response with an error message if no records are found.
         /// </summary>
-        /// <returns>if record is present it will return only List of bar details with OK response and return NotFound response(ErrorResponse) when there are no records present</returns>
+        /// <returns>
+        /// An OK response containing a list of bar details if records are present, 
+        /// or a NotFound response with an error message if no records exist.
+        /// </returns>
         [HttpGet]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BarResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BarResponse>>> GetAllBars()
@@ -51,13 +55,16 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Retrieves a specific bar details by its ID.
+        /// Retrieves the details of a specific bar by its ID.
         /// </summary>
-        /// <param name="id">Bar id for which the record to be displayed</param>
-        /// <returns>returns BarResponse object with HTTP Ok response if the record is present  
-        /// or return NotFound response(ErrorResponse) when there is no records present or 
-        /// will return bad request if id is invalid. Valid id should be greater than 0 </returns>
+        /// <param name="id">The unique identifier of the bar to retrieve. Must be greater than 0.</param>
+        /// <returns>
+        /// An BarResponse object with an HTTP OK response if the record exists,  
+        /// a NotFound response with an ErrorResponse if no record is found,  
+        /// or a BadRequest response if the ID is invalid.
+        /// </returns>
         [HttpGet("{id}")]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(BarResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -74,10 +81,11 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Retrieves all bars with their associated beers.
+        /// Retrieves all bars along with their associated beer details.
         /// </summary>
-        /// <returns>List of bars with beer details or NotFound if no records exist</returns>
+        /// <returns>A list of bars with their beer details, or a NotFound response if no records are found.</returns>
         [HttpGet("beer")]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BarWithBeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BarWithBeerResponse>>> GetAllBarsWithBeers()
@@ -90,14 +98,14 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Assigns a beer to a bar.
+        /// Assigns a beer to a specific bar.
         /// </summary>
-        /// <param name="barBeerRequest">Bar and beer IDs to link</param>
-        /// <returns>Success message or error response</returns>
+        /// <param name="barBeerRequest">The request object containing the bar and beer IDs to be linked.</param>
+        /// <returns>A success message if the assignment is successful, or an error response if it fails.</returns>
+        [HttpPost("beer")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        [HttpPost("beer")]
         public async Task<IActionResult> AssignBeerToBar(BarBeerRequest barBeerRequest)
         {
             if (barBeerRequest == null)
@@ -115,14 +123,15 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Gets all beers served at a specific bar.
+        /// Retrieves all beers served at a specific bar.
         /// </summary>
-        /// <param name="barId">Bar ID to get beers for</param>
-        /// <returns>List of beers served at the bar or error response</returns>
+        /// <param name="barId">The unique identifier of the bar whose beer list is to be retrieved.</param>
+        /// <returns>A list of beers served at the specified bar, or an error response if the request fails.</returns>
+        [HttpGet("{barId}/beer")]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        [HttpGet("{barId}/beer")]
         public async Task<ActionResult<IEnumerable<BeerResponse>>> GetBeersServedAtBar(int barId)
         {
             if (!IsValidId(barId))
@@ -136,11 +145,12 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Creates a new bar.
+        /// Creates a new bar with the provided data.
         /// </summary>
-        /// <param name="createBarRequest">Bar data to create</param>
-        /// <returns>Created bar details or Bad Request if data is invalid</returns>
+        /// <param name="createBarRequest">The request object containing the bar's data.</param>
+        /// <returns>The details of the created bar, or a Bad Request response if the input data is invalid.</returns>
         [HttpPost]
+        [Consumes("application/json")]
         [ProducesResponseType(typeof(BarResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BarResponse>> CreateBar(CreateBarRequest createBarRequest)
@@ -157,12 +167,13 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Updates an existing bar.
+        /// Updates an existing bar with the provided data.
         /// </summary>
-        /// <param name="id">Bar ID to update</param>
-        /// <param name="updateBarRequest">Updated bar data</param>
-        /// <returns>Success message or error response</returns>
+        /// <param name="id">The unique identifier of the bar to update.</param>
+        /// <param name="updateBarRequest">The request object containing the updated bar data.</param>
+        /// <returns>A success message if the update is successful, or an error response if it fails.</returns>
         [HttpPut("{id}")]
+        [Consumes("application/json")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -185,10 +196,10 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Deletes a bar by ID.
+        /// Deletes an existing bar by its unique identifier.
         /// </summary>
-        /// <param name="id">Bar ID to delete</param>
-        /// <returns>Success message or error response</returns>
+        /// <param name="id">The ID of the bar to be deleted.</param>
+        /// <returns>A success message if the deletion is successful, or an error response if it fails.</returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
