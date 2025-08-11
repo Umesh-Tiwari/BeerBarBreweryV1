@@ -63,8 +63,7 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
 ```json
 {
   "name": "string",
-  "percentageAlcoholByVolume": 0.0,
-  "breweryId": 0 // optional
+  "percentageAlcoholByVolume": 0.0
 }
 ```
 - **Success Response**: `201 Created` with `BeerResponse`
@@ -152,10 +151,10 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
   - `400 Bad Request` - Invalid ID
   - `404 Not Found` - Brewery not found
 
-#### Assign Brewery to Beer
+#### Assign Beer to Brewery
 - **POST** `/api/brewery/beer`
-- **Description**: Associates a beer with a brewery
-- **Request Body**: `BreweryWithBeerRequest`
+- **Description**: Associates a beer with a brewery using many-to-many relationship
+- **Request Body**: `BreweryBeerRequest`
 ```json
 {
   "breweryId": 0,
@@ -249,14 +248,14 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
 ## 📋 Data Models
 
 ### Request Models
-- **CreateBeerRequest**: `{ name, percentageAlcoholByVolume, breweryId? }`
+- **CreateBeerRequest**: `{ name, percentageAlcoholByVolume }`
 - **CreateBreweryRequest**: `{ name }`
 - **CreateBarRequest**: `{ name, address }`
 - **BarBeerRequest**: `{ barId, beerId }`
-- **BreweryWithBeerRequest**: `{ breweryId, beerId }`
+- **BreweryBeerRequest**: `{ breweryId, beerId }`
 
 ### Response Models
-- **BeerResponse**: `{ id, name, percentageAlcoholByVolume, breweryId? }`
+- **BeerResponse**: `{ id, name, percentageAlcoholByVolume }`
 - **BreweryResponse**: `{ id, name }`
 - **BarResponse**: `{ id, name, address }`
 - **BreweryWithBeerResponse**: `{ id, name, beers[] }`
@@ -270,6 +269,7 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
 - **Swagger/OpenAPI** documentation
 - **AutoMapper** for object mapping
 - **Repository Pattern** with Unit of Work
+- **Many-to-Many Relationships** between Beer-Bar and Beer-Brewery entities
 - **Comprehensive Error Handling** with consistent error responses
 - **Clean Architecture** with separation of concerns
 
