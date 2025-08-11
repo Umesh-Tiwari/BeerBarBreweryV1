@@ -139,15 +139,43 @@ namespace BeerBarBrewery.Tests.BusinessProcess
         #region GetBeersByAlcoholVolumeRange Tests
 
         [Test]
-        public async Task GetBeersByAlcoholVolumeRange_ReturnsBeers_WhenBeersExist()
+        public async Task GetBeersByAlcoholVolumeRange_BothParameters_ReturnsBeers()
         {
             var beerEntities = new List<Beer> { new Beer { Id = 1, Name = "Test Beer" } };
             var beerModels = new List<BeerModel> { new BeerModel { Id = 1, Name = "Test Beer" } };
 
-            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(3.0, 5.0)).ReturnsAsync(beerEntities);
+            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(3.0M, 5.0M)).ReturnsAsync(beerEntities);
             _mockMapper.Setup(x => x.Map<IEnumerable<BeerModel>>(beerEntities)).Returns(beerModels);
 
-            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(3.0, 5.0);
+            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(3.0M, 5.0M);
+
+            Assert.That(result, Is.EqualTo(beerModels));
+        }
+
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_MinimumOnly_ReturnsBeers()
+        {
+            var beerEntities = new List<Beer> { new Beer { Id = 1, Name = "High ABV Beer" } };
+            var beerModels = new List<BeerModel> { new BeerModel { Id = 1, Name = "High ABV Beer" } };
+
+            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(5.0M, null)).ReturnsAsync(beerEntities);
+            _mockMapper.Setup(x => x.Map<IEnumerable<BeerModel>>(beerEntities)).Returns(beerModels);
+
+            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(5.0M, null);
+
+            Assert.That(result, Is.EqualTo(beerModels));
+        }
+
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_MaximumOnly_ReturnsBeers()
+        {
+            var beerEntities = new List<Beer> { new Beer { Id = 1, Name = "Low ABV Beer" } };
+            var beerModels = new List<BeerModel> { new BeerModel { Id = 1, Name = "Low ABV Beer" } };
+
+            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(null, 4.0M)).ReturnsAsync(beerEntities);
+            _mockMapper.Setup(x => x.Map<IEnumerable<BeerModel>>(beerEntities)).Returns(beerModels);
+
+            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(null, 4.0M);
 
             Assert.That(result, Is.EqualTo(beerModels));
         }
@@ -155,9 +183,19 @@ namespace BeerBarBrewery.Tests.BusinessProcess
         [Test]
         public async Task GetBeersByAlcoholVolumeRange_ReturnsEmpty_WhenNoBeersFound()
         {
-            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(10.0, 15.0)).ReturnsAsync((IEnumerable<Beer>)null);
+            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(10.0M, 15.0M)).ReturnsAsync((IEnumerable<Beer>)null);
 
-            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(10.0, 15.0);
+            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(10.0M, 15.0M);
+
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_BothNull_ReturnsEmpty()
+        {
+            _mockBeerRepository.Setup(x => x.GetBeersByAlcoholVolumeRangeAsync(null, null)).ReturnsAsync(new List<Beer>());
+
+            var result = await _beerProcess.GetBeersByAlcoholVolumeRange(null, null);
 
             Assert.That(result, Is.Empty);
         }

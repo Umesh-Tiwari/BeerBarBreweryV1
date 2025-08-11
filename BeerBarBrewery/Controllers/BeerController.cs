@@ -81,37 +81,43 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Retrieves beers within a specified alcohol by volume (ABV) range.
+        /// Retrieves beers based on alcohol by volume (ABV) criteria.
         /// </summary>
         /// <param name="gtAlcoholByVolume">
-        /// The minimum ABV value (exclusive). Must be greater than 0.
+        /// Optional minimum ABV value (exclusive). If provided alone, returns beers with ABV greater than this value.
         /// </param>
         /// <param name="ltAlcoholByVolume">
-        /// The maximum ABV value (exclusive). Must be greater than <paramref name="gtAlcoholByVolume"/>.
+        /// Optional maximum ABV value (exclusive). If provided alone, returns beers with ABV less than this value.
         /// </param>
         /// <returns>
-        /// - An HTTP OK response containing a list of beers within the specified ABV range.  
-        /// - A BadRequest response if the ABV values are invalid (e.g., negative or improperly ordered).  
-        /// - A NotFound response if no beers are found within the specified ABV range.
+        /// - An HTTP OK response containing a list of beers matching the ABV criteria.  
+        /// - A BadRequest response if the ABV values are invalid or both parameters are missing.  
+        /// - A NotFound response if no beers are found matching the criteria.
         /// </returns>
         [HttpGet("BeerByRange")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<BeerResponse>>> GetBeersByAlcoholVolumeRange(decimal gtAlcoholByVolume, decimal ltAlcoholByVolume)
+        public async Task<ActionResult<IEnumerable<BeerResponse>>> GetBeersByAlcoholVolumeRange(decimal? gtAlcoholByVolume = null, decimal? ltAlcoholByVolume = null)
         {
-            if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)
-                return BadRequest(ErrorResponse("Alcohol content values must be greater than or equal to 0.",StatusCodes.Status400BadRequest));
+            if (!gtAlcoholByVolume.HasValue && !ltAlcoholByVolume.HasValue)
+                return BadRequest(ErrorResponse("At least one alcohol volume parameter must be provided.", StatusCodes.Status400BadRequest));
 
-            if (gtAlcoholByVolume >= ltAlcoholByVolume)
-                return BadRequest(ErrorResponse("Minimum alcohol volume must be less than maximum.",StatusCodes.Status400BadRequest));
+            if (gtAlcoholByVolume.HasValue && gtAlcoholByVolume < 0)
+                return BadRequest(ErrorResponse("Minimum alcohol volume must be greater than or equal to 0.", StatusCodes.Status400BadRequest));
+
+            if (ltAlcoholByVolume.HasValue && ltAlcoholByVolume < 0)
+                return BadRequest(ErrorResponse("Maximum alcohol volume must be greater than or equal to 0.", StatusCodes.Status400BadRequest));
+
+            if (gtAlcoholByVolume.HasValue && ltAlcoholByVolume.HasValue && gtAlcoholByVolume >= ltAlcoholByVolume)
+                return BadRequest(ErrorResponse("Minimum alcohol volume must be less than maximum.", StatusCodes.Status400BadRequest));
 
             var beerList = await _beerProcess.GetBeersByAlcoholVolumeRange(gtAlcoholByVolume, ltAlcoholByVolume);
-            if(!beerList.Any())
+            if (!beerList.Any())
             {
-                return NotFound(ErrorResponse("No beer records found with the above range of alcohol by volume.", StatusCodes.Status404NotFound));
+                return NotFound(ErrorResponse("No beer records found with the specified alcohol volume criteria.", StatusCodes.Status404NotFound));
             }
-            
+
             return Ok(_mapper.Map<IEnumerable<BeerResponse>>(beerList));
         }
 
