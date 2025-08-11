@@ -28,28 +28,6 @@ namespace Database.BeerBarBrewery.Repository
             return await _context.Bars.ToListAsync();
         }
 
-        // Optionally retrieves all bars with their associated beers (commented out version).
-        // This method maps bars and their beers manually. You might prefer Include() for simplicity.
-
-        /*
-        public async Task<IEnumerable<Bar>> GetAllWithBeerAsync()
-        {
-            return await _context.Bars
-                .Select(bar => new Bar
-                {
-                    Id = bar.Id,
-                    Name = bar.Name,
-                    Address = bar.Address,
-                    Beers = bar.BarBeers.Select(bb => new Beer
-                    {
-                        Id = bb.Beer.Id,
-                        Name = bb.Beer.Name,
-                        PercentageAlcoholByVolume = bb.Beer.PercentageAlcoholByVolume
-                    }).ToList()
-                }).ToListAsync();
-        }
-        */
-
         /// <summary>
         /// Retrieves a specific bar by its unique identifier.
         /// </summary>
@@ -139,5 +117,4 @@ namespace Database.BeerBarBrewery.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
     }
-
 }

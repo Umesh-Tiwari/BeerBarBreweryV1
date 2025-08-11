@@ -35,7 +35,6 @@ namespace Database.Entities
         /// <summary>
         /// Navigation property representing the bars that serve this beer via the BarBeer join entity.
         /// </summary>
-        public ICollection<BarBeer> BarBeers { get; set; }
+        public ICollection<BarBeer> BarBeers { get; set; } = new List<BarBeer>();
     }
-
 }

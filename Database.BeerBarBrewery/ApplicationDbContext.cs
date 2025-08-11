@@ -1,11 +1,5 @@
 ﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Database.BeerBarBrewery
 {
@@ -66,7 +60,34 @@ namespace Database.BeerBarBrewery
                 .HasOne(bb => bb.Beer)
                 .WithMany(b => b.BarBeers)
                 .HasForeignKey(bb => bb.BeerId);
+
+            // Configure relationship: Beer -> Brewery (many-to-one)
+            modelBuilder.Entity<Beer>()
+                .HasOne(b => b.Brewery)
+                .WithMany(br => br.Beers)
+                .HasForeignKey(b => b.BreweryId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure string length constraints
+            modelBuilder.Entity<Beer>()
+                .Property(b => b.Name)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            modelBuilder.Entity<Bar>()
+                .Property(b => b.Name)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            modelBuilder.Entity<Bar>()
+                .Property(b => b.Address)
+                .HasMaxLength(200)
+                .IsRequired();
+
+            modelBuilder.Entity<Brewery>()
+                .Property(b => b.Name)
+                .HasMaxLength(100)
+                .IsRequired();
         }
     }
-
 }

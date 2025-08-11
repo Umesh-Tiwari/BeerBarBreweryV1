@@ -93,5 +93,4 @@ namespace Database.BeerBarBrewery.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
     }
-
 }

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace BeerBarBrewery.MiddleWare
+namespace BeerBarBrewery.Middleware
 {
     /// <summary>
     /// Middleware for global exception handling.

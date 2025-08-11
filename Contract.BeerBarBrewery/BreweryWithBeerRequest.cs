@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Contract.BeerBarBrewery
 {
@@ -15,12 +11,15 @@ namespace Contract.BeerBarBrewery
         /// <summary>
         /// The ID of the brewery producing the beer.
         /// </summary>
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Valid brewery ID is required.")]
         public int BreweryId { get; set; }
 
         /// <summary>
         /// The ID of the beer to be linked to the brewery.
         /// </summary>
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Valid beer ID is required.")]
         public int BeerId { get; set; }
     }
-
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Contract.BeerBarBrewery
+﻿namespace Contract.BeerBarBrewery
 {
     /// <summary>
     /// Response DTO for a brewery with basic information.
@@ -22,5 +16,4 @@ namespace Contract.BeerBarBrewery
         /// </summary>
         public string Name { get; set; }
     }
-
 }

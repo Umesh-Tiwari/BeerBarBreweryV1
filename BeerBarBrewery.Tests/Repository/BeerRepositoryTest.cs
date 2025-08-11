@@ -1,20 +1,13 @@
 ﻿using Database.BeerBarBrewery;
 using Database.BeerBarBrewery.Repository;
 using Database.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeerBarBrewery.Tests.Repository
 {
-    using NUnit.Framework;
     using Microsoft.EntityFrameworkCore;
+    using NUnit.Framework;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Unit tests for BeerRepository using in-memory database.
@@ -135,7 +128,7 @@ namespace BeerBarBrewery.Tests.Repository
             await _repository.SaveChangesAsync();
 
             var updatedBeer = await _context.Beers.FindAsync(beer.Id);
-            Assert.That(updatedBeer.Name, Is.EqualTo("Updated"));
+            Assert.That(updatedBeer?.Name, Is.EqualTo("Updated"));
         }
 
         /// <summary>
@@ -154,6 +147,55 @@ namespace BeerBarBrewery.Tests.Repository
             var result = await _context.Beers.FindAsync(beer.Id);
             Assert.That(result, Is.Null);
         }
-    }
 
+        /// <summary>
+        /// Verifies GetByIdAsync returns null for non-existing ID.
+        /// </summary>
+        [Test]
+        public async Task GetByIdAsync_NonExistingId_ReturnsNull()
+        {
+            var result = await _repository.GetByIdAsync(999);
+
+            Assert.That(result, Is.Null);
+        }
+
+        /// <summary>
+        /// Verifies SaveChangesAsync returns true when changes exist.
+        /// </summary>
+        [Test]
+        public async Task SaveChangesAsync_ReturnsTrue_WhenChangesExist()
+        {
+            var beer = new Beer { Name = "Test Beer", PercentageAlcoholByVolume = 5.0M };
+            await _repository.AddAsync(beer);
+
+            var result = await _repository.SaveChangesAsync();
+
+            Assert.That(result, Is.True);
+        }
+
+        /// <summary>
+        /// Verifies SaveChangesAsync returns false when no changes exist.
+        /// </summary>
+        [Test]
+        public async Task SaveChangesAsync_ReturnsFalse_WhenNoChanges()
+        {
+            var result = await _repository.SaveChangesAsync();
+
+            Assert.That(result, Is.False);
+        }
+
+        /// <summary>
+        /// Verifies GetBeersByAlcoholVolumeRangeAsync returns empty when no beers match range.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRangeAsync_NoMatch_ReturnsEmpty()
+        {
+            _context.Beers.Add(new Beer { Name = "Low ABV", PercentageAlcoholByVolume = 3.0M });
+            await _context.SaveChangesAsync();
+
+            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(5.0, 8.0);
+
+            Assert.That(result.Count(), Is.EqualTo(0));
+        }
+    }
 }

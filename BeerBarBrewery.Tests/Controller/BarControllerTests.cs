@@ -2,14 +2,10 @@
 using BeerBarBrewery.Controllers;
 using Business.BeerBarBrewery.Process.Interface;
 using Contract.BeerBarBrewery;
-using Database.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Model.BeerBarBrewery;
 using Moq;
-using NUnit.Framework;
 using Models = Model.BeerBarBrewery;
-
 
 namespace BeerBarBrewery.Tests.Controller
 {
@@ -258,5 +254,4 @@ namespace BeerBarBrewery.Tests.Controller
             Assert.That(okResult?.Value, Is.EqualTo(beerDto));
         }
     }
-
 }

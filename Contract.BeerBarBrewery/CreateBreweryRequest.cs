@@ -15,5 +15,4 @@ namespace Contract.BeerBarBrewery
         [StringLength(100, ErrorMessage = "Brewery name cannot exceed 100 characters.")]
         public string Name { get; set; }
     }
-
 }

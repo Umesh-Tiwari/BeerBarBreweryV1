@@ -35,10 +35,14 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// The GetAllBeers method will return all the beer records. In case there is no record it will return not found with error response message.
+        /// Retrieves all beer records. Returns a NotFound response with an error message if no records are found.
         /// </summary>
-        /// <returns>if record is present it will return List of beer details with OK response and return NotFound response when there is no records present</returns>
+        /// <returns>
+        /// An OK response containing a list of beer details if records are present,  
+        /// or a NotFound response if no records exist.
+        /// </returns>
         [HttpGet]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BeerResponse>>> GetAllBeers()
@@ -53,11 +57,16 @@ namespace BeerBarBrewery.Controllers
         /// <summary>
         /// Retrieves a specific beer by its ID.
         /// </summary>
-        /// <param name="id">The ID of the beer against which the beer record will be displayed.</param>
-        /// <returns>returns BeerResponse object with HTTP Ok response if the record exists  
-        /// or return NotFound response(ErrorResponse) when there are no records present 
-        /// or will return bad request if id is invalid. Valid id should be greater than 0 </returns>
+        /// <param name="id">
+        /// The ID of the beer to retrieve. Must be greater than 0.
+        /// </param>
+        /// <returns>
+        /// - An HTTP OK response containing a BeerResponse object if the record exists.  
+        /// - A NotFound response with an ErrorResponse if no record is found.  
+        /// - A BadRequest response if the ID is invalid (i.e., less than or equal to 0).
+        /// </returns>
         [HttpGet("{id}")]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(BeerResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -74,17 +83,24 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Retrieves beers within a specified alcohol by volume (ABV) range. The range should be between parameter gtAlcoholByVolume and ltAlcoholByVolume
+        /// Retrieves beers within a specified alcohol by volume (ABV) range.
         /// </summary>
-        /// <param name="gtAlcoholByVolume">The minimum ABV (greater than).</param>
-        /// <param name="ltAlcoholByVolume">The maximum ABV (less than).</param>
-        /// <returns>Returns all the beer record specified alcohol by volume (ABV) range along with HTTP OK response
-        /// returns bad request if invalid alcohol volume values are passed
-        /// returns not found in case there is no record found in specified alcohol by volume (ABV) range</returns>
+        /// <param name="gtAlcoholByVolume">
+        /// The minimum ABV value (exclusive). Must be greater than 0.
+        /// </param>
+        /// <param name="ltAlcoholByVolume">
+        /// The maximum ABV value (exclusive). Must be greater than <paramref name="gtAlcoholByVolume"/>.
+        /// </param>
+        /// <returns>
+        /// - An HTTP OK response containing a list of beers within the specified ABV range.  
+        /// - A BadRequest response if the ABV values are invalid (e.g., negative or improperly ordered).  
+        /// - A NotFound response if no beers are found within the specified ABV range.
+        /// </returns>
+        [HttpGet("BeerByRange")]
+        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        [HttpGet("BeerByRange")]
         public async Task<ActionResult<IEnumerable<BeerResponse>>> GetBeersByAlcoholVolumeRange(double gtAlcoholByVolume, double ltAlcoholByVolume)
         {
             if (gtAlcoholByVolume < 0 || ltAlcoholByVolume < 0)
@@ -102,12 +118,14 @@ namespace BeerBarBrewery.Controllers
             return Ok(_mapper.Map<IEnumerable<BeerResponse>>(beerList));
         }
 
-        /// <summary>
-        /// This method will create new beer record based on the beer details passed. The brewery id is optional and can be linked later.
+        /// <summary>Creates a new beer record using the provided beer details.  
+        /// The brewery ID is optional and can be linked later.
         /// </summary>
-        /// <param name="createBeerRequest">The beer data to create.</param>
-        /// <returns>It will return HTTP create response if the record is created successfully
-        /// It will return bad request in case parameter passed is null or invalid</returns>
+        /// <param name="createBeerRequest">The beer data used to create the new record.</param>
+        /// <returns>
+        /// - An HTTP Created response if the beer record is successfully created.  
+        /// - A BadRequest response if the input data is null or invalid.
+        /// </returns>
         [HttpPost]
         [ProducesResponseType(typeof(BeerResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
@@ -126,14 +144,17 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Updates an existing beer by ID with the modified beer data.
+        /// Updates an existing beer record by its ID using the provided data.
         /// </summary>
-        /// <param name="id">The ID of the beer to update.</param>
+        /// <param name="id">The ID of the beer to update. Must be greater than 0.</param>
         /// <param name="updateBeerRequest">The updated beer data.</param>
-        /// <returns>The string message with HTTP Ok response if the record is updated successfully 
-        /// returns bad request if the data is invalid or missing
-        /// returns not found response if the record does not exist </returns>
+        /// <returns>
+        /// - An HTTP OK response with a success message if the record is updated successfully.  
+        /// - A BadRequest response if the input data is invalid or missing.  
+        /// - A NotFound response if no beer record exists with the specified ID.
+        /// </returns>
         [HttpPut("{id}")]
+        [Consumes("application/json")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -155,13 +176,13 @@ namespace BeerBarBrewery.Controllers
             return Ok(new { message = "Beer updated successfully." });
         }
 
-        /// <summary>
-        /// Deletes a beer by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the beer to delete.</param>
-        /// <returns>The string message with Ok response if the record is deleted successfully 
-        /// returns bad request if the beer id is invalid.
-        /// returns not found response if the record does not exist </returns>
+        /// <summary>Deletes a beer record by its ID.</summary>
+        /// <param name="id">The ID of the beer to delete. Must be greater than 0.</param>
+        /// <returns>
+        /// - An HTTP OK response with a success message if the record is deleted successfully.  
+        /// - A BadRequest response if the beer ID is invalid.  
+        /// - A NotFound response if no beer record exists with the specified ID.
+        /// </returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
@@ -178,5 +199,4 @@ namespace BeerBarBrewery.Controllers
             return Ok(new { message = "Beer deleted successfully." });
         }
     }
-
 }

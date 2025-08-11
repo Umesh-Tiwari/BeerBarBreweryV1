@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Contract.BeerBarBrewery
+﻿namespace Contract.BeerBarBrewery
 {
     /// <summary>
     /// This class represent Bar with associated Beer information. It is a response object.

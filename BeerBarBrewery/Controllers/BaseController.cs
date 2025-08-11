@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using Contract.BeerBarBrewery;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BeerBarBrewery.Controllers
 {
@@ -14,7 +14,6 @@ namespace BeerBarBrewery.Controllers
                 Message = message,
                 StatusCode = statusCode
             };
-
         }
 
         protected ActionResult ErrorResponseActionResult(string message, int statusCode = 400)

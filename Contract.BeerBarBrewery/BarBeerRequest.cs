@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Contract.BeerBarBrewery
 {
@@ -17,13 +12,14 @@ namespace Contract.BeerBarBrewery
         /// The ID of the bar where the beer will be served.
         /// </summary>
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Valid bar ID is required.")]
         public int BarId { get; set; }
 
         /// <summary>
         /// The ID of the beer to be linked to the bar.
         /// </summary>
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Valid beer ID is required.")]
         public int BeerId { get; set; }
     }
-
 }

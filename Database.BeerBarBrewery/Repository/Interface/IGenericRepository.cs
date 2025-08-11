@@ -1,5 +1,4 @@
-﻿
-namespace Database.BeerBarBrewery.Repository.Interface
+﻿namespace Database.BeerBarBrewery.Repository.Interface
 {
     /// <summary>
     /// Generic repository interface defining standard CRUD operations for any entity type.
@@ -38,5 +37,4 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// <param name="entity">The entity to delete.</param>
         void Delete(T entity);
     }
-
 }

@@ -53,5 +53,4 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// <returns>A collection of beers matching the ABV range.</returns>
         Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(double minAbv, double maxAbv);
     }
-
 }
