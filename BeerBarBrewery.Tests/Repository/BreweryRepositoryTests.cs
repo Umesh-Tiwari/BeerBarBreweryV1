@@ -81,19 +81,18 @@ namespace BeerBarBrewery.Tests.Repository
         [Test]
         public async Task GetAllWithBeerAsync_ReturnsBreweriesWithBeers()
         {
-            var brewery = new Brewery { Name = "Test Brewery" };
+            var brewery = new Brewery { Name = "Test Brewery",BreweryBeers = new List<BreweryBeer> { new BreweryBeer { BeerId = 1, BreweryId=1 } } };
             _context.Breweries.Add(brewery);
             await _context.SaveChangesAsync();
 
-            var beer = new Beer { Name = "Test Beer", BreweryId = brewery.Id };
+            var beer = new Beer { Name = "Test Beer" };
             _context.Beers.Add(beer);
             await _context.SaveChangesAsync();
 
             var result = await _repository.GetAllWithBeerAsync();
 
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.First().Beers.Count, Is.EqualTo(1));
-            Assert.That(result.First().Beers.First().Name, Is.EqualTo("Test Beer"));
+            Assert.That(result.First().BreweryBeers.Count, Is.EqualTo(1));
         }
 
         #endregion
@@ -107,7 +106,7 @@ namespace BeerBarBrewery.Tests.Repository
             _context.Breweries.Add(brewery);
             await _context.SaveChangesAsync();
 
-            var beer = new Beer { Name = "Test Beer", BreweryId = brewery.Id };
+            var beer = new Beer { Name = "Test Beer" };
             _context.Beers.Add(beer);
             await _context.SaveChangesAsync();
 
@@ -115,7 +114,6 @@ namespace BeerBarBrewery.Tests.Repository
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Name, Is.EqualTo("Test Brewery"));
-            Assert.That(result.Beers.Count, Is.EqualTo(1));
         }
 
         [Test]

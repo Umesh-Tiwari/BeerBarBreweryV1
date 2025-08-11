@@ -29,7 +29,13 @@ namespace Business.BeerBarBrewery.Mapping
             
             //Brewery mappings
             CreateMap<CreateBreweryModel, Brewery>().ReverseMap();
-            CreateMap<BreweryModel, Brewery>().ReverseMap();
+            CreateMap<BreweryModel, Brewery>()
+                .ForMember(dest => dest.BreweryBeers, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(dest => dest.Beers, opt => opt.MapFrom(src => src.BreweryBeers.Select(bb => bb.Beer)));
+            
+            //BreweryBeer mappings
+            CreateMap<BreweryBeerModel, BreweryBeer>().ReverseMap();
             
         }
     }

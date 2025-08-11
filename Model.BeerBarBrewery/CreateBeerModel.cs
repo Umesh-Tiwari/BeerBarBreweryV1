@@ -21,10 +21,6 @@ namespace Model.BeerBarBrewery
         [Range(0, 100, ErrorMessage = "Alcohol percentage must be between 0 and 100.")]
         public decimal PercentageAlcoholByVolume { get; set; }
 
-        /// <summary>
-        /// Optional ID of the brewery that produces this beer.
-        /// Can be null if not yet assigned.
-        /// </summary>
-        public int? BreweryId { get; set; }
+
     }
 }

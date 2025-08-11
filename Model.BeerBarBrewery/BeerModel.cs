@@ -20,9 +20,6 @@
         /// </summary>
         public decimal PercentageAlcoholByVolume { get; set; }
 
-        /// <summary>
-        /// Optional reference to the brewery that produced this beer.
-        /// </summary>
-        public int? BreweryId { get; set; }
+
     }
 }

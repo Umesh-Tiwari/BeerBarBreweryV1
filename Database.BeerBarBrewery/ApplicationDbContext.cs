@@ -38,6 +38,11 @@ namespace Database.BeerBarBrewery
         public DbSet<BarBeer> BarBeers { get; set; }
 
         /// <summary>
+        /// Gets or sets the BreweryBeer join entities representing beers produced by breweries.
+        /// </summary>
+        public DbSet<BreweryBeer> BreweryBeers { get; set; }
+
+        /// <summary>
         /// Configures the entity relationships and composite keys.
         /// </summary>
         /// <param name="modelBuilder">Provides a simple API for configuring EF Core model behavior.</param>
@@ -61,12 +66,21 @@ namespace Database.BeerBarBrewery
                 .WithMany(b => b.BarBeers)
                 .HasForeignKey(bb => bb.BeerId);
 
-            // Configure relationship: Beer -> Brewery (many-to-one)
-            modelBuilder.Entity<Beer>()
-                .HasOne(b => b.Brewery)
-                .WithMany(br => br.Beers)
-                .HasForeignKey(b => b.BreweryId)
-                .OnDelete(DeleteBehavior.SetNull);
+            // Configure composite primary key for BreweryBeer join table
+            modelBuilder.Entity<BreweryBeer>()
+                .HasKey(bb => new { bb.BreweryId, bb.BeerId });
+
+            // Configure relationship: BreweryBeer -> Brewery (many-to-one)
+            modelBuilder.Entity<BreweryBeer>()
+                .HasOne(bb => bb.Brewery)
+                .WithMany(b => b.BreweryBeers)
+                .HasForeignKey(bb => bb.BreweryId);
+
+            // Configure relationship: BreweryBeer -> Beer (many-to-one)
+            modelBuilder.Entity<BreweryBeer>()
+                .HasOne(bb => bb.Beer)
+                .WithMany(b => b.BreweryBeers)
+                .HasForeignKey(bb => bb.BeerId);
 
             // Configure string length constraints
             modelBuilder.Entity<Beer>()

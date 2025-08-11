@@ -21,19 +21,13 @@
         public decimal PercentageAlcoholByVolume { get; set; }
 
         /// <summary>
-        /// Gets or sets the optional foreign key for the associated brewery.
-        /// Nullable to allow beers without an initial brewery assignment.
-        /// </summary>
-        public int? BreweryId { get; set; }
-
-        /// <summary>
-        /// Navigation property to the brewery that produced the beer.
-        /// </summary>
-        public Brewery Brewery { get; set; }
-
-        /// <summary>
         /// Navigation property representing the bars that serve this beer via the BarBeer join entity.
         /// </summary>
         public ICollection<BarBeer> BarBeers { get; set; } = new List<BarBeer>();
+
+        /// <summary>
+        /// Navigation property representing the breweries that produce this beer via the BreweryBeer join entity.
+        /// </summary>
+        public ICollection<BreweryBeer> BreweryBeers { get; set; } = new List<BreweryBeer>();
     }
 }

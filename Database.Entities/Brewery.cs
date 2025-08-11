@@ -16,8 +16,8 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// Navigation property representing the collection of beers produced by the brewery.
+        /// Navigation property representing the beers produced by this brewery via the BreweryBeer join entity.
         /// </summary>
-        public ICollection<Beer> Beers { get; set; } = new List<Beer>();
+        public ICollection<BreweryBeer> BreweryBeers { get; set; } = new List<BreweryBeer>();
     }
 }

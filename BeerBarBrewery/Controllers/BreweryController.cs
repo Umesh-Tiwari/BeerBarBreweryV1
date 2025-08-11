@@ -183,30 +183,26 @@ namespace BeerBarBrewery.Controllers
             return Ok(new { message = "Brewery deleted successfully." });
         }
 
-        /// <summary>Associates a beer with a brewery. A beer is linked to one brewery, while a brewery can have multiple beers.</summary>
-        /// <param name="breweryWithBeerRequest">An object containing the brewery ID and beer ID. The brewery ID will be assigned to the beer record.</param>
-        /// <returns>Returns an HTTP OK response with a success message, a NotFound response (ErrorResponse) if no matching records exist, or a BadRequest response if any ID is invalid (must be greater than 0).</returns>
+        /// <summary>Assigns a beer to a brewery using many-to-many relationship.</summary>
+        /// <param name="breweryBeerRequest">An object containing the brewery ID and beer ID to be linked.</param>
+        /// <returns>Returns an HTTP OK response with a success message, a NotFound response if no matching records exist, or a BadRequest response if any ID is invalid.</returns>
         [HttpPost("beer")]
-        [Consumes("application/json")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AssignBreweryToBeer(BreweryWithBeerRequest breweryWithBeerRequest)
+        public async Task<IActionResult> AssignBeerToBrewery(BreweryBeerRequest breweryBeerRequest)
         {
-            if (breweryWithBeerRequest == null)
-                return BadRequest(ErrorResponse("BreweryWithBeerRequest data cannot be null.", StatusCodes.Status400BadRequest));
+            if (breweryBeerRequest == null)
+                return BadRequest(ErrorResponse("BreweryBeerRequest data cannot be null.", StatusCodes.Status400BadRequest));
 
-            if (!ModelState.IsValid)
-                return BadRequest(ErrorResponse("Brewery data passed is missing or invalid. Please check the data.", StatusCodes.Status400BadRequest));
-
-            if (!IsValidId(breweryWithBeerRequest.BreweryId) || !IsValidId(breweryWithBeerRequest.BeerId))
+            if (!IsValidId(breweryBeerRequest.BreweryId) || !IsValidId(breweryBeerRequest.BeerId))
                 return BadRequest(ErrorResponse("Invalid BreweryId or BeerId.", StatusCodes.Status400BadRequest));
 
-            var result = await _breweryProcess.AssignBreweryToBeer(_mapper.Map<BreweryBeerModel>(breweryWithBeerRequest));
+            var result = await _breweryProcess.AssignBeerToBrewery(_mapper.Map<BreweryBeerModel>(breweryBeerRequest));
             if (!result)
-                return NotFound(ErrorResponse($"Brewery with ID {breweryWithBeerRequest.BreweryId} or Beer with ID {breweryWithBeerRequest.BeerId} not found.", StatusCodes.Status404NotFound));
+                return NotFound(ErrorResponse($"Brewery with ID {breweryBeerRequest.BreweryId} or Beer with ID {breweryBeerRequest.BeerId} not found.", StatusCodes.Status404NotFound));
 
-            return Ok(new { message = "Brewery assigned to beer successfully." });
+            return Ok(new { message = "Beer assigned to brewery successfully." });
         }
     }
 }

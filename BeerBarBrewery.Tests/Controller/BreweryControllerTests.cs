@@ -379,21 +379,21 @@ namespace BeerBarBrewery.Tests.Controller
 
         #endregion
 
-        #region AssignBreweryToBeer Tests
+        #region AssignBeerToBrewery Tests
 
         /// <summary>
-        /// Tests assigning brewery to beer returns OkObjectResult.
+        /// Tests assigning beer to brewery returns OkObjectResult.
         /// </summary>
         [Test]
-        public async Task AssignBreweryToBeer_ValidRequest_ReturnsOkResult()
+        public async Task AssignBeerToBrewery_ValidRequest_ReturnsOkResult()
         {
-            var breweryWithBeerRequest = new BreweryWithBeerRequest { BreweryId = 1, BeerId = 1 };
+            var breweryBeerRequest = new BreweryBeerRequest { BreweryId = 1, BeerId = 1 };
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 1, BeerId = 1 };
 
-            _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryWithBeerRequest)).Returns(breweryBeerModel);
-            _mockBreweryProcess.Setup(x => x.AssignBreweryToBeer(breweryBeerModel)).ReturnsAsync(true);
+            _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryBeerRequest)).Returns(breweryBeerModel);
+            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(true);
 
-            var result = await _controller.AssignBreweryToBeer(breweryWithBeerRequest);
+            var result = await _controller.AssignBeerToBrewery(breweryBeerRequest);
 
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
 
@@ -403,46 +403,46 @@ namespace BeerBarBrewery.Tests.Controller
             var response = okResult.Value;
             var messageProp = response?.GetType().GetProperty("message")?.GetValue(response)?.ToString();
 
-            Assert.That(messageProp, Is.EqualTo("Brewery assigned to beer successfully."));
+            Assert.That(messageProp, Is.EqualTo("Beer assigned to brewery successfully."));
         }
 
         /// <summary>
-        /// Tests AssignBreweryToBeer returns BadRequest when request is null.
+        /// Tests AssignBeerToBrewery returns BadRequest when request is null.
         /// </summary>
         [Test]
-        public async Task AssignBreweryToBeer_NullRequest_ReturnsBadRequest()
+        public async Task AssignBeerToBrewery_NullRequest_ReturnsBadRequest()
         {
-            var result = await _controller.AssignBreweryToBeer(null);
+            var result = await _controller.AssignBeerToBrewery(null);
 
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         /// <summary>
-        /// Tests AssignBreweryToBeer returns BadRequest for invalid IDs.
+        /// Tests AssignBeerToBrewery returns BadRequest for invalid IDs.
         /// </summary>
         [Test]
-        public async Task AssignBreweryToBeer_InvalidIds_ReturnsBadRequest()
+        public async Task AssignBeerToBrewery_InvalidIds_ReturnsBadRequest()
         {
-            var breweryWithBeerRequest = new BreweryWithBeerRequest { BreweryId = 0, BeerId = 1 };
+            var breweryBeerRequest = new BreweryBeerRequest { BreweryId = 0, BeerId = 1 };
 
-            var result = await _controller.AssignBreweryToBeer(breweryWithBeerRequest);
+            var result = await _controller.AssignBeerToBrewery(breweryBeerRequest);
 
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         /// <summary>
-        /// Tests AssignBreweryToBeer returns NotFound when brewery or beer not found.
+        /// Tests AssignBeerToBrewery returns NotFound when brewery or beer not found.
         /// </summary>
         [Test]
-        public async Task AssignBreweryToBeer_BreweryOrBeerNotFound_ReturnsNotFound()
+        public async Task AssignBeerToBrewery_BreweryOrBeerNotFound_ReturnsNotFound()
         {
-            var breweryWithBeerRequest = new BreweryWithBeerRequest { BreweryId = 999, BeerId = 999 };
+            var breweryBeerRequest = new BreweryBeerRequest { BreweryId = 999, BeerId = 999 };
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 999, BeerId = 999 };
 
-            _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryWithBeerRequest)).Returns(breweryBeerModel);
-            _mockBreweryProcess.Setup(x => x.AssignBreweryToBeer(breweryBeerModel)).ReturnsAsync(false);
+            _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryBeerRequest)).Returns(breweryBeerModel);
+            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(false);
 
-            var result = await _controller.AssignBreweryToBeer(breweryWithBeerRequest);
+            var result = await _controller.AssignBeerToBrewery(breweryBeerRequest);
 
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
