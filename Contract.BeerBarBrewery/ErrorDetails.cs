@@ -1,4 +1,4 @@
-﻿namespace BeerBarBrewery
+﻿namespace Contract.BeerBarBrewery
 {
     public class ErrorDetails
     {

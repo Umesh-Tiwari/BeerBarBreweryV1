@@ -24,10 +24,6 @@ namespace Database.Entities
         /// <summary>
         /// Navigation property representing the beers served at this bar via the BarBeer join entity.
         /// </summary>
-        public ICollection<BarBeer> BarBeers { get; set; }
-
-        // If using EF Core 5+ and want direct access to beers via many-to-many, you could uncomment and configure this:
-        // public ICollection<Beer> Beers { get; set; }
+        public ICollection<BarBeer> BarBeers { get; set; } = new List<BarBeer>();
     }
-
 }

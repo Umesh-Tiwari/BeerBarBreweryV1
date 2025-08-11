@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BeerBarBrewery.Controllers;
 using Business.BeerBarBrewery.Process;
 using Business.BeerBarBrewery.Process.Interface;
 using Contract.BeerBarBrewery;
@@ -7,11 +6,6 @@ using Database.BeerBarBrewery.Repository.Interface;
 using Database.Entities;
 using Model.BeerBarBrewery;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeerBarBrewery.Tests.BusinessProcess
 {
@@ -264,5 +258,4 @@ namespace BeerBarBrewery.Tests.BusinessProcess
             Assert.That(result, Is.Empty);
         }
     }
-
 }

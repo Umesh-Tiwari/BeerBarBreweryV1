@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model.BeerBarBrewery
+﻿namespace Model.BeerBarBrewery
 {
     /// <summary>
     /// Represents the business model for a brewery entity used in the service/business layer.
@@ -27,5 +21,4 @@ namespace Model.BeerBarBrewery
         /// </summary>
         public List<BeerModel>? Beers { get; set; }
     }
-
 }

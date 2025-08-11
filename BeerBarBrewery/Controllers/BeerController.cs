@@ -178,5 +178,4 @@ namespace BeerBarBrewery.Controllers
             return Ok(new { message = "Beer deleted successfully." });
         }
     }
-
 }

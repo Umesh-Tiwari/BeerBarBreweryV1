@@ -61,5 +61,4 @@ namespace Database.BeerBarBrewery.UnitOfWork
             _context.Dispose();
         }
     }
-
 }

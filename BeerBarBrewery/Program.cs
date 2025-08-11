@@ -1,6 +1,6 @@
 using AutoMapper;
 using BeerBarBrewery.Mapping;
-using BeerBarBrewery.MiddleWare;
+using BeerBarBrewery.Middleware;
 using Business.BeerBarBrewery.Mapping;
 using Business.BeerBarBrewery.Process;
 using Business.BeerBarBrewery.Process.Interface;

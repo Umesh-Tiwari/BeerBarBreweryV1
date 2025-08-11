@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Contract.BeerBarBrewery;
-using Database.Entities;
 using Model.BeerBarBrewery;
-
 
 namespace BeerBarBrewery.Mapping
 {
@@ -31,5 +29,4 @@ namespace BeerBarBrewery.Mapping
             CreateMap<BreweryWithBeerRequest, BreweryBeerModel>().ReverseMap();
         }
     }
-
 }

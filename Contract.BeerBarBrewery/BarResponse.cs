@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Contract.BeerBarBrewery
+﻿namespace Contract.BeerBarBrewery
 {
     /// <summary>
     /// Data Transfer Object (DTO) representing a bar.
@@ -26,7 +20,5 @@ namespace Contract.BeerBarBrewery
         /// Address/location of the bar.
         /// </summary>
         public string Address { get; set; }
-
     }
-
 }

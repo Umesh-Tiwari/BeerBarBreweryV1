@@ -51,5 +51,4 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// <returns>True if changes were saved successfully; otherwise, false.</returns>
         Task<bool> SaveChangesAsync();
     }
-
 }

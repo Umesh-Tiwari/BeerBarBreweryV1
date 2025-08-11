@@ -64,5 +64,4 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// <returns>A list of Bar entities including associated beers.</returns>
         Task<IEnumerable<Bar>> GetAllBarsWithBeersAsync();
     }
-
 }

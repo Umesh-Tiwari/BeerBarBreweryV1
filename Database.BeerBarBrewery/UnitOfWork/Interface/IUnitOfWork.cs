@@ -29,5 +29,4 @@ namespace Database.BeerBarBrewery.UnitOfWork.Interface
         /// <returns>True if changes were saved successfully; otherwise, false.</returns>
         Task<bool> SaveChangesAsync();
     }
-
 }

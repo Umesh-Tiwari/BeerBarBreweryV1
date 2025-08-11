@@ -1,4 +1,4 @@
-﻿namespace BeerBarBrewery.MiddleWare
+﻿namespace BeerBarBrewery.Middleware
 {
     public class NotFoundException : Exception
     {

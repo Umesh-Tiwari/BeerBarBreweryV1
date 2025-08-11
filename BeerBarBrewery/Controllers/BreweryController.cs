@@ -218,5 +218,4 @@ namespace BeerBarBrewery.Controllers
             return Ok(new { message = "Brewery assigned to beer successfully." });
         }
     }
-
 }

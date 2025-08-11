@@ -3,7 +3,6 @@ using Business.BeerBarBrewery.Process.Interface;
 using Contract.BeerBarBrewery;
 using Microsoft.AspNetCore.Mvc;
 using Model.BeerBarBrewery;
-using System.Linq;
 namespace BeerBarBrewery.Controllers
 {
     /// <summary>
@@ -25,7 +24,7 @@ namespace BeerBarBrewery.Controllers
         private readonly IBarProcess _barProcess;
 
         /// <summary>
-        /// Bar controller instance injecting IBarprocess and IMapper dependency
+        /// Bar controller instance injecting IBarProcess and IMapper dependency
         /// </summary>
         /// <param name="barProcess"> service object to carry out business process</param>
         /// <param name="mapper"> Mapper used to map object to object. here it is used to map contract object to model object</param>
@@ -78,7 +77,7 @@ namespace BeerBarBrewery.Controllers
         /// Retrieves all bars with their associated beers.
         /// </summary>
         /// <returns>List of bars with beer details or NotFound if no records exist</returns>
-        [HttpGet("with-beers")]
+        [HttpGet("beer")]
         [ProducesResponseType(typeof(IEnumerable<BarWithBeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BarWithBeerResponse>>> GetAllBarsWithBeers()
@@ -205,7 +204,5 @@ namespace BeerBarBrewery.Controllers
 
             return Ok(new { message = "Bar record deleted successfully." });
         }
-
-
     }
 }

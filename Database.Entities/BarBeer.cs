@@ -27,5 +27,4 @@ namespace Database.Entities
         /// </summary>
         public Beer Beer { get; set; }
     }
-
 }

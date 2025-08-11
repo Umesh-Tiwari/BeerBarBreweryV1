@@ -63,5 +63,4 @@ namespace Business.BeerBarBrewery.Process.Interface
         /// <returns>True if deletion is successful; false if bar not found.</returns>
         Task<bool> DeleteBar(int id);
     }
-
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Model.BeerBarBrewery
 {
@@ -15,11 +11,14 @@ namespace Model.BeerBarBrewery
         /// <summary>
         /// Name of the beer to be created.
         /// </summary>
+        [Required(ErrorMessage = "Beer name is required.")]
+        [StringLength(100, ErrorMessage = "Beer name cannot exceed 100 characters.")]
         public string Name { get; set; }
 
         /// <summary>
         /// Alcohol content of the beer represented as a percentage (ABV - Alcohol by Volume).
         /// </summary>
+        [Range(0, 100, ErrorMessage = "Alcohol percentage must be between 0 and 100.")]
         public double PercentageAlcoholByVolume { get; set; }
 
         /// <summary>
@@ -28,5 +27,4 @@ namespace Model.BeerBarBrewery
         /// </summary>
         public int? BreweryId { get; set; }
     }
-
 }

@@ -18,7 +18,6 @@
         /// <summary>
         /// Navigation property representing the collection of beers produced by the brewery.
         /// </summary>
-        public ICollection<Beer> Beers { get; set; }
+        public ICollection<Beer> Beers { get; set; } = new List<Beer>();
     }
-
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Model.BeerBarBrewery
 {
@@ -15,7 +11,8 @@ namespace Model.BeerBarBrewery
         /// <summary>
         /// Name of the brewery to be created.
         /// </summary>
+        [Required(ErrorMessage = "Brewery name is required.")]
+        [StringLength(100, ErrorMessage = "Brewery name cannot exceed 100 characters.")]
         public string Name { get; set; }
     }
-
 }

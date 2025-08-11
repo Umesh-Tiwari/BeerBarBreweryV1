@@ -1,20 +1,13 @@
 ﻿using Database.BeerBarBrewery;
 using Database.BeerBarBrewery.Repository;
 using Database.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeerBarBrewery.Tests.Repository
 {
-    using NUnit.Framework;
     using Microsoft.EntityFrameworkCore;
+    using NUnit.Framework;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Unit tests for BeerRepository using in-memory database.
@@ -135,7 +128,7 @@ namespace BeerBarBrewery.Tests.Repository
             await _repository.SaveChangesAsync();
 
             var updatedBeer = await _context.Beers.FindAsync(beer.Id);
-            Assert.That(updatedBeer.Name, Is.EqualTo("Updated"));
+            Assert.That(updatedBeer?.Name, Is.EqualTo("Updated"));
         }
 
         /// <summary>
@@ -155,5 +148,4 @@ namespace BeerBarBrewery.Tests.Repository
             Assert.That(result, Is.Null);
         }
     }
-
 }

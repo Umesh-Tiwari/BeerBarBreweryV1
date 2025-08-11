@@ -25,9 +25,13 @@ namespace Business.BeerBarBrewery.Mapping
             
             //Beer mappings
             CreateMap<BeerModel, Beer>()
-                .ForMember(dest => dest.BreweryId, opt => opt.MapFrom(src => src.BreweryId))
-                .ReverseMap();
-            CreateMap<CreateBeerModel, Beer>().ReverseMap();
+                .ForMember(dest => dest.PercentageAlcoholByVolume, opt => opt.MapFrom(src => (decimal)src.PercentageAlcoholByVolume))
+                .ReverseMap()
+                .ForMember(dest => dest.PercentageAlcoholByVolume, opt => opt.MapFrom(src => (double)src.PercentageAlcoholByVolume));
+            CreateMap<CreateBeerModel, Beer>()
+                .ForMember(dest => dest.PercentageAlcoholByVolume, opt => opt.MapFrom(src => (decimal)src.PercentageAlcoholByVolume))
+                .ReverseMap()
+                .ForMember(dest => dest.PercentageAlcoholByVolume, opt => opt.MapFrom(src => (double)src.PercentageAlcoholByVolume));
             
             //Brewery mappings
             CreateMap<CreateBreweryModel, Brewery>().ReverseMap();
@@ -35,5 +39,4 @@ namespace Business.BeerBarBrewery.Mapping
             
         }
     }
-
 }
