@@ -1,5 +1,4 @@
-﻿
-namespace Database.Entities
+﻿namespace Database.Entities
 {
     /// <summary>
     /// Represents a Beer entity with its properties and relationships.

@@ -6,7 +6,6 @@ using Model.BeerBarBrewery;
 
 namespace Business.BeerBarBrewery.Process
 {
-
     /// <summary>
     /// Implements business logic for managing beer entities.
     /// Handles creation, retrieval, update, deletion, and filtering of beers.
