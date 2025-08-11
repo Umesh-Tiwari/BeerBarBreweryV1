@@ -1,15 +1,11 @@
 using Database.BeerBarBrewery;
 using Database.BeerBarBrewery.Repository.Interface;
-using Database.BeerBarBrewery.UnitOfWork;
 using Database.Entities;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace BeerBarBrewery.Tests.UnitOfWork
 {
-    using Microsoft.EntityFrameworkCore;
-    using Moq;
-    using NUnit.Framework;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Unit tests for UnitOfWork class.
     /// Tests repository coordination and transaction management.

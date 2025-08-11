@@ -4,7 +4,6 @@ using Database.BeerBarBrewery.Repository.Interface;
 using Database.Entities;
 using Model.BeerBarBrewery;
 using Moq;
-using NUnit.Framework;
 
 namespace BeerBarBrewery.Tests.BusinessProcess
 {

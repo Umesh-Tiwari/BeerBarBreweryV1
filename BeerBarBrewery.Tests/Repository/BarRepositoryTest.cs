@@ -1,14 +1,10 @@
 using Database.BeerBarBrewery;
 using Database.BeerBarBrewery.Repository;
 using Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeerBarBrewery.Tests.Repository
 {
-    using Microsoft.EntityFrameworkCore;
-    using NUnit.Framework;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Unit tests for BarRepository using in-memory database.
     /// Covers CRUD operations and beer-bar relationship management.
