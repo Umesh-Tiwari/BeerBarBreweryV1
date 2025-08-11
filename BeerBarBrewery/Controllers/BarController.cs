@@ -42,7 +42,6 @@ namespace BeerBarBrewery.Controllers
         /// or a NotFound response with an error message if no records exist.
         /// </returns>
         [HttpGet]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BarResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BarResponse>>> GetAllBars()
@@ -64,7 +63,6 @@ namespace BeerBarBrewery.Controllers
         /// or a BadRequest response if the ID is invalid.
         /// </returns>
         [HttpGet("{id}")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(BarResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
@@ -85,7 +83,6 @@ namespace BeerBarBrewery.Controllers
         /// </summary>
         /// <returns>A list of bars with their beer details, or a NotFound response if no records are found.</returns>
         [HttpGet("beer")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BarWithBeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<BarWithBeerResponse>>> GetAllBarsWithBeers()
@@ -128,7 +125,6 @@ namespace BeerBarBrewery.Controllers
         /// <param name="barId">The unique identifier of the bar whose beer list is to be retrieved.</param>
         /// <returns>A list of beers served at the specified bar, or an error response if the request fails.</returns>
         [HttpGet("{barId}/beer")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]

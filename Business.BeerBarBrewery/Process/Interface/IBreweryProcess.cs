@@ -42,11 +42,11 @@ namespace Business.BeerBarBrewery.Process.Interface
         Task<bool> UpdateBrewery(int id, CreateBreweryModel updateBreweryModel);
 
         /// <summary>
-        /// Links an existing brewery to a specific beer.
+        /// Links an existing beer to a specific brewery.
         /// </summary>
         /// <param name="breweryBeerModel">Model containing BreweryId and BeerId for linking.</param>
         /// <returns>True if the link is successful; false if brewery or beer not found.</returns>
-        Task<bool> AssignBreweryToBeer(BreweryBeerModel breweryBeerModel);
+        Task<bool> AssignBeerToBrewery(BreweryBeerModel breweryBeerModel);
 
         /// <summary>
         /// Deletes a brewery identified by its ID.

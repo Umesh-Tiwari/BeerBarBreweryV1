@@ -67,21 +67,22 @@ namespace Database.BeerBarBrewery.Repository
         }
 
         /// <summary>
-        /// Retrieves beers whose alcohol by volume (ABV) falls within a specified range.
+        /// Retrieves beers based on alcohol by volume (ABV) criteria.
         /// </summary>
-        /// <param name="minAbv">Minimum ABV value (inclusive).</param>
-        /// <param name="maxAbv">Maximum ABV value (inclusive).</param>
-        /// <returns>A collection of beers matching the specified ABV range.</returns>
-        public async Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(double minAbv, double maxAbv)
+        /// <param name="minAbv">Optional minimum ABV value. If provided, returns beers with ABV greater than this value.</param>
+        /// <param name="maxAbv">Optional maximum ABV value. If provided, returns beers with ABV less than this value.</param>
+        /// <returns>A collection of beers matching the ABV criteria.</returns>
+        public async Task<IEnumerable<Beer>> GetBeersByAlcoholVolumeRangeAsync(decimal? minAbv, decimal? maxAbv)
         {
-            // Convert to decimal to match the PercentageAlcoholByVolume type
-            decimal min = Convert.ToDecimal(minAbv);
-            decimal max = Convert.ToDecimal(maxAbv);
+            var query = _context.Beers.AsQueryable();
 
-            // Query beers with ABV within the specified range
-            return await _context.Beers
-                .Where(b => b.PercentageAlcoholByVolume >= min && b.PercentageAlcoholByVolume <= max)
-                .ToListAsync();
+            if (minAbv.HasValue)
+                query = query.Where(b => b.PercentageAlcoholByVolume > minAbv.Value);
+
+            if (maxAbv.HasValue)
+                query = query.Where(b => b.PercentageAlcoholByVolume < maxAbv.Value);
+
+            return await query.ToListAsync();
         }
 
         /// <summary>

@@ -91,10 +91,10 @@ namespace BeerBarBrewery.Tests.Repository
         }
 
         /// <summary>
-        /// Verifies beers are filtered correctly by alcohol volume range.
+        /// Verifies beers are filtered correctly by alcohol volume range with both parameters.
         /// </summary>
         [Test]
-        public async Task GetBeersByAlcoholVolumeRangeAsync_ReturnsCorrectBeers()
+        public async Task GetBeersByAlcoholVolumeRangeAsync_BothParameters_ReturnsCorrectBeers()
         {
             _context.Beers.AddRange(
                 new Beer { Name = "Low ABV", PercentageAlcoholByVolume = 3.5M },
@@ -103,7 +103,7 @@ namespace BeerBarBrewery.Tests.Repository
             );
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(4.0, 6.0);
+            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(4.0M, 6.0M);
 
             Assert.That(result.Count(), Is.EqualTo(1));
             Assert.That(result.First().Name, Is.EqualTo("Mid ABV"));
@@ -181,7 +181,47 @@ namespace BeerBarBrewery.Tests.Repository
         }
 
         /// <summary>
-        /// Verifies GetBeersByAlcoholVolumeRangeAsync returns empty when no beers match range.
+        /// Verifies GetBeersByAlcoholVolumeRangeAsync returns beers greater than minimum ABV only.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRangeAsync_MinimumOnly_ReturnsCorrectBeers()
+        {
+            _context.Beers.AddRange(
+                new Beer { Name = "Low ABV", PercentageAlcoholByVolume = 3.5M },
+                new Beer { Name = "Mid ABV", PercentageAlcoholByVolume = 5.0M },
+                new Beer { Name = "High ABV", PercentageAlcoholByVolume = 8.0M }
+            );
+            await _context.SaveChangesAsync();
+
+            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(4.0M, null);
+
+            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(result.Any(b => b.Name == "Mid ABV"), Is.True);
+            Assert.That(result.Any(b => b.Name == "High ABV"), Is.True);
+        }
+
+        /// <summary>
+        /// Verifies GetBeersByAlcoholVolumeRangeAsync returns beers less than maximum ABV only.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRangeAsync_MaximumOnly_ReturnsCorrectBeers()
+        {
+            _context.Beers.AddRange(
+                new Beer { Name = "Low ABV", PercentageAlcoholByVolume = 3.5M },
+                new Beer { Name = "Mid ABV", PercentageAlcoholByVolume = 5.0M },
+                new Beer { Name = "High ABV", PercentageAlcoholByVolume = 8.0M }
+            );
+            await _context.SaveChangesAsync();
+
+            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(null, 6.0M);
+
+            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(result.Any(b => b.Name == "Low ABV"), Is.True);
+            Assert.That(result.Any(b => b.Name == "Mid ABV"), Is.True);
+        }
+
+        /// <summary>
+        /// Verifies GetBeersByAlcoholVolumeRangeAsync returns empty when no beers match criteria.
         /// </summary>
         [Test]
         public async Task GetBeersByAlcoholVolumeRangeAsync_NoMatch_ReturnsEmpty()
@@ -189,9 +229,26 @@ namespace BeerBarBrewery.Tests.Repository
             _context.Beers.Add(new Beer { Name = "Low ABV", PercentageAlcoholByVolume = 3.0M });
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(5.0, 8.0);
+            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(5.0M, 8.0M);
 
             Assert.That(result.Count(), Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Verifies GetBeersByAlcoholVolumeRangeAsync returns all beers when both parameters are null.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRangeAsync_BothNull_ReturnsAllBeers()
+        {
+            _context.Beers.AddRange(
+                new Beer { Name = "Low ABV", PercentageAlcoholByVolume = 3.5M },
+                new Beer { Name = "High ABV", PercentageAlcoholByVolume = 8.0M }
+            );
+            await _context.SaveChangesAsync();
+
+            var result = await _repository.GetBeersByAlcoholVolumeRangeAsync(null, null);
+
+            Assert.That(result.Count(), Is.EqualTo(2));
         }
     }
 }

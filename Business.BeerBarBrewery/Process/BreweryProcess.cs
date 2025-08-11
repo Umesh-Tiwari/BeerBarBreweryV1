@@ -100,11 +100,11 @@ namespace Business.BeerBarBrewery.Process
         }
 
         /// <summary>
-        /// Associates a beer with a brewery by updating the beer's BreweryId.
+        /// Associates a beer with a brewery using the many-to-many relationship.
         /// </summary>
         /// <param name="breweryBeerModel">Model containing BreweryId and BeerId.</param>
         /// <returns>True if association successful; false if beer or brewery not found.</returns>
-        public async Task<bool> AssignBreweryToBeer(BreweryBeerModel breweryBeerModel)
+        public async Task<bool> AssignBeerToBrewery(BreweryBeerModel breweryBeerModel)
         {
             var brewery = await _breweryRepository.GetByIdAsync(breweryBeerModel.BreweryId);
             var beer = await _beerRepository.GetByIdAsync(breweryBeerModel.BeerId);
@@ -112,9 +112,8 @@ namespace Business.BeerBarBrewery.Process
             if (brewery == null || beer == null)
                 return false;
 
-            beer.BreweryId = brewery.Id;
-            _beerRepository.Update(beer);
-            await _beerRepository.SaveChangesAsync();
+            await _breweryRepository.AssignBeerAsync(breweryBeerModel.BreweryId, breweryBeerModel.BeerId);
+            await _breweryRepository.SaveChangesAsync();
             return true;
         }
 

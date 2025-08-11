@@ -50,5 +50,12 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// </summary>
         /// <returns>True if changes were saved successfully; otherwise, false.</returns>
         Task<bool> SaveChangesAsync();
+
+        /// <summary>
+        /// Assigns a beer to a brewery by creating an association between them.
+        /// </summary>
+        /// <param name="breweryId">The ID of the brewery.</param>
+        /// <param name="beerId">The ID of the beer.</param>
+        Task AssignBeerAsync(int breweryId, int beerId);
     }
 }

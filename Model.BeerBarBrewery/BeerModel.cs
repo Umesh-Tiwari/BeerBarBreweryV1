@@ -18,11 +18,8 @@
         /// <summary>
         /// Alcohol content represented as a percentage (ABV - Alcohol by Volume).
         /// </summary>
-        public double PercentageAlcoholByVolume { get; set; }
+        public decimal PercentageAlcoholByVolume { get; set; }
 
-        /// <summary>
-        /// Optional reference to the brewery that produced this beer.
-        /// </summary>
-        public int? BreweryId { get; set; }
+
     }
 }

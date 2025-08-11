@@ -27,6 +27,7 @@ namespace BeerBarBrewery.Mapping
             CreateMap<BreweryWithBeerResponse, BreweryModel>().ReverseMap();
             CreateMap<CreateBreweryRequest, CreateBreweryModel>().ReverseMap();
             CreateMap<BreweryWithBeerRequest, BreweryBeerModel>().ReverseMap();
+            CreateMap<BreweryBeerRequest, BreweryBeerModel>().ReverseMap();
         }
     }
 }

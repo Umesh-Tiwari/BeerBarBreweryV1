@@ -241,8 +241,8 @@ namespace BeerBarBrewery.Tests.Controller
         public async Task GetBeersServedAtBarAsync_ValidBarId_ReturnsBeers()
         {
             int barId = 1;
-            var beerDto = new List<BeerResponse> { new BeerResponse { Id = 2, Name = "New Beer", BreweryId = 2, PercentageAlcoholByVolume = 12.0 } };
-            var beerModel = new List<BeerModel> { new BeerModel { Id = 2, Name = "New Beer", BreweryId = 2, PercentageAlcoholByVolume = 12.0 } };
+            var beerDto = new List<BeerResponse> { new BeerResponse { Id = 2, Name = "New Beer", PercentageAlcoholByVolume = 12.0M } };
+            var beerModel = new List<BeerModel> { new BeerModel { Id = 2, Name = "New Beer", PercentageAlcoholByVolume = 12.0M } };
 
             _mockBarProcess.Setup(u => u.GetBeersServedAtBarAsync(barId)).ReturnsAsync(beerModel);
             _mockMapper.Setup(m => m.Map<IEnumerable<BeerResponse>>(beerModel)).Returns(beerDto);

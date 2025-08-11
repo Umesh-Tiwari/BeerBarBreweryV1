@@ -36,12 +36,12 @@ namespace Business.BeerBarBrewery.Process.Interface
         Task<bool> UpdateBeer(int id, CreateBeerModel updateModel);
 
         /// <summary>
-        /// Retrieves beers that fall within the specified alcohol by volume (ABV) range.
+        /// Retrieves beers based on alcohol by volume (ABV) criteria.
         /// </summary>
-        /// <param name="minAbv">Minimum ABV (greater than or equal to).</param>
-        /// <param name="maxAbv">Maximum ABV (less than or equal to).</param>
-        /// <returns>List of beers within the given ABV range.</returns>
-        Task<IEnumerable<BeerModel>> GetBeersByAlcoholVolumeRange(double minAbv, double maxAbv);
+        /// <param name="minAbv">Optional minimum ABV. If provided, returns beers with ABV greater than this value.</param>
+        /// <param name="maxAbv">Optional maximum ABV. If provided, returns beers with ABV less than this value.</param>
+        /// <returns>List of beers matching the ABV criteria.</returns>
+        Task<IEnumerable<BeerModel>> GetBeersByAlcoholVolumeRange(decimal? minAbv, decimal? maxAbv);
 
         /// <summary>
         /// Deletes a beer identified by its ID.

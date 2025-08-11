@@ -20,11 +20,8 @@ namespace Contract.BeerBarBrewery
         /// </summary>
         [Required(ErrorMessage = "Alcohol content is required.")]
         [Range(0.1, 100.0, ErrorMessage = "Alcohol content must be between 0.1% and 100%.")]
-        public double PercentageAlcoholByVolume { get; set; }
+        public decimal PercentageAlcoholByVolume { get; set; }
 
-        /// <summary>
-        /// Optional ID of the brewery producing this beer. Null if not linked at creation time.
-        /// </summary>
-        public int? BreweryId { get; set; }
+
     }
 }

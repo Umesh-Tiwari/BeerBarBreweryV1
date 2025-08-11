@@ -166,10 +166,10 @@ namespace BeerBarBrewery.Tests.BusinessProcess
 
         #endregion
 
-        #region AssignBreweryToBeer Tests
+        #region AssignBeerToBrewery Tests
 
         [Test]
-        public async Task AssignBreweryToBeer_ReturnsTrue_WhenBothExist()
+        public async Task AssignBeerToBrewery_ReturnsTrue_WhenBothExist()
         {
             var breweryEntity = new Brewery { Id = 1, Name = "Test Brewery" };
             var beerEntity = new Beer { Id = 1, Name = "Test Beer" };
@@ -177,18 +177,17 @@ namespace BeerBarBrewery.Tests.BusinessProcess
 
             _mockBreweryRepository.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(breweryEntity);
             _mockBeerRepository.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(beerEntity);
-            _mockBeerRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(true);
+            _mockBreweryRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(true);
 
-            var result = await _breweryProcess.AssignBreweryToBeer(breweryBeerModel);
+            var result = await _breweryProcess.AssignBeerToBrewery(breweryBeerModel);
 
             Assert.That(result, Is.True);
-            Assert.That(beerEntity.BreweryId, Is.EqualTo(1));
-            _mockBeerRepository.Verify(x => x.Update(beerEntity), Times.Once);
-            _mockBeerRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+            _mockBreweryRepository.Verify(x => x.AssignBeerAsync(1, 1), Times.Once);
+            _mockBreweryRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         [Test]
-        public async Task AssignBreweryToBeer_ReturnsFalse_WhenBreweryNotFound()
+        public async Task AssignBeerToBrewery_ReturnsFalse_WhenBreweryNotFound()
         {
             var beerEntity = new Beer { Id = 1, Name = "Test Beer" };
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 999, BeerId = 1 };
@@ -196,13 +195,13 @@ namespace BeerBarBrewery.Tests.BusinessProcess
             _mockBreweryRepository.Setup(x => x.GetByIdAsync(999)).ReturnsAsync((Brewery)null);
             _mockBeerRepository.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(beerEntity);
 
-            var result = await _breweryProcess.AssignBreweryToBeer(breweryBeerModel);
+            var result = await _breweryProcess.AssignBeerToBrewery(breweryBeerModel);
 
             Assert.That(result, Is.False);
         }
 
         [Test]
-        public async Task AssignBreweryToBeer_ReturnsFalse_WhenBeerNotFound()
+        public async Task AssignBeerToBrewery_ReturnsFalse_WhenBeerNotFound()
         {
             var breweryEntity = new Brewery { Id = 1, Name = "Test Brewery" };
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 1, BeerId = 999 };
@@ -210,7 +209,7 @@ namespace BeerBarBrewery.Tests.BusinessProcess
             _mockBreweryRepository.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(breweryEntity);
             _mockBeerRepository.Setup(x => x.GetByIdAsync(999)).ReturnsAsync((Beer)null);
 
-            var result = await _breweryProcess.AssignBreweryToBeer(breweryBeerModel);
+            var result = await _breweryProcess.AssignBeerToBrewery(breweryBeerModel);
 
             Assert.That(result, Is.False);
         }

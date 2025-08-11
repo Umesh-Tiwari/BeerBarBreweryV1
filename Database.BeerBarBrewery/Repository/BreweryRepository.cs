@@ -37,7 +37,8 @@ namespace Database.BeerBarBrewery.Repository
         public async Task<IEnumerable<Brewery>> GetAllWithBeerAsync()
         {
             return await _context.Breweries
-                .Include(b => b.Beers)
+                .Include(b => b.BreweryBeers)
+                    .ThenInclude(bb => bb.Beer)
                 .ToListAsync();
         }
 
@@ -49,7 +50,8 @@ namespace Database.BeerBarBrewery.Repository
         public async Task<Brewery?> GetByIdAsync(int id)
         {
             return await _context.Breweries
-                .Include(b => b.Beers)
+                .Include(b => b.BreweryBeers)
+                    .ThenInclude(bb => bb.Beer)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -78,6 +80,22 @@ namespace Database.BeerBarBrewery.Repository
         public void Delete(Brewery brewery)
         {
             _context.Breweries.Remove(brewery);
+        }
+
+        /// <summary>
+        /// Assigns a beer to a brewery if not already assigned.
+        /// </summary>
+        /// <param name="breweryId">The ID of the brewery.</param>
+        /// <param name="beerId">The ID of the beer to assign.</param>
+        public async Task AssignBeerAsync(int breweryId, int beerId)
+        {
+            var exists = await _context.BreweryBeers
+                .AnyAsync(bb => bb.BreweryId == breweryId && bb.BeerId == beerId);
+
+            if (!exists)
+            {
+                await _context.BreweryBeers.AddAsync(new BreweryBeer { BreweryId = breweryId, BeerId = beerId });
+            }
         }
 
         /// <summary>

@@ -38,14 +38,14 @@ namespace BeerBarBrewery.Tests.Controller
         {
             var beerModels = new List<BeerModel>
             {
-                new BeerModel { Id = 1, Name = "Beer One", PercentageAlcoholByVolume = 5.0 },
-                new BeerModel { Id = 2, Name = "Beer Two", PercentageAlcoholByVolume = 4.5 }
+                new BeerModel { Id = 1, Name = "Beer One", PercentageAlcoholByVolume = 5.0M },
+                new BeerModel { Id = 2, Name = "Beer Two", PercentageAlcoholByVolume = 4.5M }
             };
 
             var beerResponses = new List<BeerResponse>
             {
-                new BeerResponse { Id = 1, Name = "Beer One", PercentageAlcoholByVolume = 5.0 },
-                new BeerResponse { Id = 2, Name = "Beer Two", PercentageAlcoholByVolume = 4.5 }
+                new BeerResponse { Id = 1, Name = "Beer One", PercentageAlcoholByVolume = 5.0M },
+                new BeerResponse { Id = 2, Name = "Beer Two", PercentageAlcoholByVolume = 4.5M }
             };
 
             _mockBeerProcess.Setup(x => x.GetAllBeers()).ReturnsAsync(beerModels);
@@ -83,8 +83,8 @@ namespace BeerBarBrewery.Tests.Controller
         [Test]
         public async Task GetBeerById_ValidId_ReturnsMappedBeerResponse()
         {
-            var beerModel = new BeerModel { Id = 1, Name = "Test Beer", PercentageAlcoholByVolume = 5.0 };
-            var beerResponse = new BeerResponse { Id = 1, Name = "Test Beer", PercentageAlcoholByVolume = 5.0 };
+            var beerModel = new BeerModel { Id = 1, Name = "Test Beer", PercentageAlcoholByVolume = 5.0M };
+            var beerResponse = new BeerResponse { Id = 1, Name = "Test Beer", PercentageAlcoholByVolume = 5.0M };
 
             _mockBeerProcess.Setup(x => x.GetBeerById(1)).ReturnsAsync(beerModel);
             _mockMapper.Setup(m => m.Map<BeerResponse>(beerModel)).Returns(beerResponse);
@@ -132,18 +132,18 @@ namespace BeerBarBrewery.Tests.Controller
         {
             var beerModels = new List<BeerModel>
             {
-                new BeerModel { Id = 1, Name = "Light Beer", PercentageAlcoholByVolume = 4.0 }
+                new BeerModel { Id = 1, Name = "Light Beer", PercentageAlcoholByVolume = 4.0M }
             };
 
             var beerResponses = new List<BeerResponse>
             {
-                new BeerResponse { Id = 1, Name = "Light Beer", PercentageAlcoholByVolume = 4.0 }
+                new BeerResponse { Id = 1, Name = "Light Beer", PercentageAlcoholByVolume = 4.0M }
             };
 
-            _mockBeerProcess.Setup(x => x.GetBeersByAlcoholVolumeRange(3.0, 5.0)).ReturnsAsync(beerModels);
+            _mockBeerProcess.Setup(x => x.GetBeersByAlcoholVolumeRange(3.0M, 5.0M)).ReturnsAsync(beerModels);
             _mockMapper.Setup(m => m.Map<IEnumerable<BeerResponse>>(beerModels)).Returns(beerResponses);
 
-            var result = await _controller.GetBeersByAlcoholVolumeRange(3.0, 5.0);
+            var result = await _controller.GetBeersByAlcoholVolumeRange(3.0M, 5.0M);
 
             Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
             var okResult = result.Result as OkObjectResult;
@@ -151,12 +151,34 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
-        /// Tests GetBeersByAlcoholVolumeRange returns BadRequest for negative values.
+        /// Tests GetBeersByAlcoholVolumeRange returns BadRequest when both parameters are null.
         /// </summary>
         [Test]
-        public async Task GetBeersByAlcoholVolumeRange_NegativeValues_ReturnsBadRequest()
+        public async Task GetBeersByAlcoholVolumeRange_BothParametersNull_ReturnsBadRequest()
         {
-            var result = await _controller.GetBeersByAlcoholVolumeRange(-1.0, 5.0);
+            var result = await _controller.GetBeersByAlcoholVolumeRange(null, null);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests GetBeersByAlcoholVolumeRange returns BadRequest for negative minimum value.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_NegativeMinimum_ReturnsBadRequest()
+        {
+            var result = await _controller.GetBeersByAlcoholVolumeRange(-1.0M, 5.0M);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests GetBeersByAlcoholVolumeRange returns BadRequest for negative maximum value.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_NegativeMaximum_ReturnsBadRequest()
+        {
+            var result = await _controller.GetBeersByAlcoholVolumeRange(3.0M, -2.0M);
 
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -165,24 +187,35 @@ namespace BeerBarBrewery.Tests.Controller
         /// Tests GetBeersByAlcoholVolumeRange returns BadRequest when min >= max.
         /// </summary>
         [Test]
-        public async Task GetBeersByAlcoholVolumeRange_InvalidRange_ReturnsBadRequest()
+        public async Task GetBeersByAlcoholVolumeRange_MinimumGreaterThanMaximum_ReturnsBadRequest()
         {
-            var result = await _controller.GetBeersByAlcoholVolumeRange(5.0, 3.0);
+            var result = await _controller.GetBeersByAlcoholVolumeRange(5.0M, 3.0M);
 
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         /// <summary>
-        /// Tests GetBeersByAlcoholVolumeRange returns NotFound when no beers in range.
+        /// Tests GetBeersByAlcoholVolumeRange returns BadRequest when min equals max.
         /// </summary>
         [Test]
-        public async Task GetBeersByAlcoholVolumeRange_NoBeersInRange_ReturnsNotFound()
+        public async Task GetBeersByAlcoholVolumeRange_MinimumEqualsMaximum_ReturnsBadRequest()
+        {
+            var result = await _controller.GetBeersByAlcoholVolumeRange(5.0M, 5.0M);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests GetBeersByAlcoholVolumeRange returns NotFound when no beers match criteria.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_NoBeersMatchCriteria_ReturnsNotFound()
         {
             var emptyBeerList = new List<BeerModel>();
 
-            _mockBeerProcess.Setup(x => x.GetBeersByAlcoholVolumeRange(10.0, 15.0)).ReturnsAsync(emptyBeerList);
+            _mockBeerProcess.Setup(x => x.GetBeersByAlcoholVolumeRange(10.0M, 15.0M)).ReturnsAsync(emptyBeerList);
 
-            var result = await _controller.GetBeersByAlcoholVolumeRange(10.0, 15.0);
+            var result = await _controller.GetBeersByAlcoholVolumeRange(10.0M, 15.0M);
 
             Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
         }
@@ -197,10 +230,10 @@ namespace BeerBarBrewery.Tests.Controller
         [Test]
         public async Task CreateBeer_ValidRequest_ReturnsCreatedAtAction()
         {
-            var createBeerRequest = new CreateBeerRequest { Name = "New Beer", PercentageAlcoholByVolume = 5.0 };
-            var createBeerModel = new CreateBeerModel { Name = "New Beer", PercentageAlcoholByVolume = 5.0 };
-            var beerModel = new BeerModel { Id = 1, Name = "New Beer", PercentageAlcoholByVolume = 5.0 };
-            var beerResponse = new BeerResponse { Id = 1, Name = "New Beer", PercentageAlcoholByVolume = 5.0 };
+            var createBeerRequest = new CreateBeerRequest { Name = "New Beer", PercentageAlcoholByVolume = 5.0M };
+            var createBeerModel = new CreateBeerModel { Name = "New Beer", PercentageAlcoholByVolume = 5.0M };
+            var beerModel = new BeerModel { Id = 1, Name = "New Beer", PercentageAlcoholByVolume = 5.0M };
+            var beerResponse = new BeerResponse { Id = 1, Name = "New Beer", PercentageAlcoholByVolume = 5.0M };
 
             _mockMapper.Setup(m => m.Map<CreateBeerModel>(createBeerRequest)).Returns(createBeerModel);
             _mockBeerProcess.Setup(x => x.CreateBeer(createBeerModel)).ReturnsAsync(beerModel);
@@ -238,8 +271,8 @@ namespace BeerBarBrewery.Tests.Controller
         public async Task UpdateBeer_ExistingBeer_ReturnsOkResult()
         {
             int beerId = 1;
-            var updateBeerRequest = new CreateBeerRequest { Name = "Updated Beer", PercentageAlcoholByVolume = 6.0 };
-            var updateBeerModel = new CreateBeerModel { Name = "Updated Beer", PercentageAlcoholByVolume = 6.0 };
+            var updateBeerRequest = new CreateBeerRequest { Name = "Updated Beer", PercentageAlcoholByVolume = 6.0M };
+            var updateBeerModel = new CreateBeerModel { Name = "Updated Beer", PercentageAlcoholByVolume = 6.0M };
 
             _mockMapper.Setup(m => m.Map<CreateBeerModel>(updateBeerRequest)).Returns(updateBeerModel);
             _mockBeerProcess.Setup(x => x.UpdateBeer(beerId, updateBeerModel)).ReturnsAsync(true);
