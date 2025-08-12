@@ -56,6 +56,7 @@ namespace Database.BeerBarBrewery.Repository.Interface
         /// </summary>
         /// <param name="breweryId">The ID of the brewery.</param>
         /// <param name="beerId">The ID of the beer.</param>
-        Task AssignBeerAsync(int breweryId, int beerId);
+        /// <returns>True if new relationship created, false if already exists.</returns>
+        Task<bool> AssignBeerAsync(int breweryId, int beerId);
     }
 }

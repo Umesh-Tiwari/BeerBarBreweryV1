@@ -252,6 +252,20 @@ namespace BeerBarBrewery.Tests.Controller
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
+        /// <summary>
+        /// Tests CreateBrewery returns BadRequest when model state is invalid.
+        /// </summary>
+        [Test]
+        public async Task CreateBrewery_InvalidModelState_ReturnsBadRequest()
+        {
+            var createBreweryRequest = new CreateBreweryRequest { Name = "" };
+            _controller.ModelState.AddModelError("Name", "Name is required");
+
+            var result = await _controller.CreateBrewery(createBreweryRequest);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
         #endregion
 
         #region UpdateBrewery Tests
@@ -391,7 +405,7 @@ namespace BeerBarBrewery.Tests.Controller
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 1, BeerId = 1 };
 
             _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryBeerRequest)).Returns(breweryBeerModel);
-            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(true);
+            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(AssignmentResult.Success);
 
             var result = await _controller.AssignBeerToBrewery(breweryBeerRequest);
 
@@ -453,7 +467,7 @@ namespace BeerBarBrewery.Tests.Controller
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 999, BeerId = 999 };
 
             _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryBeerRequest)).Returns(breweryBeerModel);
-            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(false);
+            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(AssignmentResult.NotFound);
 
             var result = await _controller.AssignBeerToBrewery(breweryBeerRequest);
 
@@ -461,7 +475,7 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
-        /// Tests assigning a beer that is already assigned to a brewery returns Ok (idempotent operation).
+        /// Tests assigning a beer that is already assigned to a brewery returns Ok with appropriate message.
         /// </summary>
         [Test]
         public async Task AssignBeerToBrewery_BeerAlreadyAssigned_ReturnsOk()
@@ -470,7 +484,7 @@ namespace BeerBarBrewery.Tests.Controller
             var breweryBeerModel = new BreweryBeerModel { BreweryId = 1, BeerId = 1 };
 
             _mockMapper.Setup(m => m.Map<BreweryBeerModel>(breweryBeerRequest)).Returns(breweryBeerModel);
-            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(true);
+            _mockBreweryProcess.Setup(x => x.AssignBeerToBrewery(breweryBeerModel)).ReturnsAsync(AssignmentResult.AlreadyExists);
 
             var result = await _controller.AssignBeerToBrewery(breweryBeerRequest);
 
@@ -481,7 +495,7 @@ namespace BeerBarBrewery.Tests.Controller
             var response = okResult.Value;
             var messageProp = response?.GetType().GetProperty("message")?.GetValue(response)?.ToString();
 
-            Assert.That(messageProp, Is.EqualTo("Beer assigned to brewery successfully."));
+            Assert.That(messageProp, Is.EqualTo("Beer already assigned to brewery."));
         }
 
         #endregion

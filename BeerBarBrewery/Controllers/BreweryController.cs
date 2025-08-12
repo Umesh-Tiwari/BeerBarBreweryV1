@@ -199,10 +199,14 @@ namespace BeerBarBrewery.Controllers
                 return BadRequest(ErrorResponse("Invalid BreweryId or BeerId.", StatusCodes.Status400BadRequest));
 
             var result = await _breweryProcess.AssignBeerToBrewery(_mapper.Map<BreweryBeerModel>(breweryBeerRequest));
-            if (!result)
-                return NotFound(ErrorResponse($"Brewery with ID {breweryBeerRequest.BreweryId} or Beer with ID {breweryBeerRequest.BeerId} not found.", StatusCodes.Status404NotFound));
-
-            return Ok(new { message = "Beer assigned to brewery successfully." });
+            
+            return result switch
+            {
+                AssignmentResult.Success => Ok(new { message = "Beer assigned to brewery successfully." }),
+                AssignmentResult.AlreadyExists => Ok(new { message = "Beer already assigned to brewery." }),
+                AssignmentResult.NotFound => NotFound(ErrorResponse($"Brewery with ID {breweryBeerRequest.BreweryId} or Beer with ID {breweryBeerRequest.BeerId} not found.", StatusCodes.Status404NotFound)),
+                _ => BadRequest(ErrorResponse("Unknown error occurred.", StatusCodes.Status400BadRequest))
+            };
         }
     }
 }

@@ -30,19 +30,19 @@ namespace Business.BeerBarBrewery.Process
         /// Associates a beer with a specific bar.
         /// </summary>
         /// <param name="barBeerLinkDto">DTO containing bar and beer IDs to link.</param>
-        /// <returns>True if successful, false if bar or beer not found.</returns>
-        public async Task<bool> LinkBarToBeer(BarBeerRequest barBeerLinkDto)
+        /// <returns>AssignmentResult indicating success, already exists, or not found.</returns>
+        public async Task<AssignmentResult> LinkBarToBeer(BarBeerRequest barBeerLinkDto)
         {
             var bar = await _barRepository.GetByIdAsync(barBeerLinkDto.BarId);
             var beer = await _beerRepository.GetByIdAsync(barBeerLinkDto.BeerId);
 
             if (bar == null || beer == null)
-                return false;
+                return AssignmentResult.NotFound;
 
-            await _barRepository.AssignBeerAsync(barBeerLinkDto.BarId, barBeerLinkDto.BeerId);
+            var isNewRelationship = await _barRepository.AssignBeerAsync(barBeerLinkDto.BarId, barBeerLinkDto.BeerId);
             await _barRepository.SaveChangesAsync();
 
-            return true;
+            return isNewRelationship ? AssignmentResult.Success : AssignmentResult.AlreadyExists;
         }
 
         /// <summary>

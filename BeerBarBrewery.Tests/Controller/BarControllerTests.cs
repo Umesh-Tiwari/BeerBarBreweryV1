@@ -33,7 +33,7 @@ namespace BeerBarBrewery.Tests.Controller
         /// Tests GetBarById returns a mapped DTO when bar exists.
         /// </summary>
         [Test]
-        public async Task GetBarById_ReturnsMappedDto()
+        public async Task GetBarById_ValidId_ReturnsMappedDto()
         {
             var bar = new Models.BarModel { Id = 1, Name = "Test Bar" };
             var barDto = new BarResponse { Id = 1, Name = "Test Bar" };
@@ -43,7 +43,31 @@ namespace BeerBarBrewery.Tests.Controller
 
             var result = await _controller.GetBarById(1);
 
-            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests GetBarById returns BadRequest for invalid ID.
+        /// </summary>
+        [Test]
+        public async Task GetBarById_InvalidId_ReturnsBadRequest()
+        {
+            var result = await _controller.GetBarById(0);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests GetBarById returns NotFound when bar doesn't exist.
+        /// </summary>
+        [Test]
+        public async Task GetBarById_BarNotFound_ReturnsNotFound()
+        {
+            _mockBarProcess.Setup(r => r.GetBarById(999)).ReturnsAsync((BarModel)null);
+
+            var result = await _controller.GetBarById(999);
+
+            Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         /// <summary>
@@ -75,6 +99,62 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
+        /// Tests that GetAllBars returns NotFound when no bars exist.
+        /// </summary>
+        [Test]
+        public async Task GetAllBars_NoBars_ReturnsNotFound()
+        {
+            var emptyBarList = new List<BarModel>();
+
+            _mockBarProcess.Setup(u => u.GetAllBars()).ReturnsAsync(emptyBarList);
+
+            var result = await _controller.GetAllBars();
+
+            Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests that GetAllBarsWithBeers returns OkObjectResult with bars and their beers.
+        /// </summary>
+        [Test]
+        public async Task GetAllBarsWithBeers_ReturnsOkWithBarsAndBeers()
+        {
+            var barModels = new List<BarModel>
+            {
+                new BarModel { Id = 1, Name = "Bar One" }
+            };
+
+            var barWithBeerResponses = new List<BarWithBeerResponse>
+            {
+                new BarWithBeerResponse { Id = 1, Name = "Bar One" }
+            };
+
+            _mockBarProcess.Setup(u => u.GetAllBarsWithBeers()).ReturnsAsync(barModels);
+            _mockMapper.Setup(m => m.Map<IEnumerable<BarWithBeerResponse>>(barModels)).Returns(barWithBeerResponses);
+
+            var result = await _controller.GetAllBarsWithBeers();
+
+            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
+            var okResult = result.Result as OkObjectResult;
+            Assert.That(okResult?.Value, Is.EqualTo(barWithBeerResponses));
+        }
+
+        /// <summary>
+        /// Tests that GetAllBarsWithBeers returns NotFound when no bars exist.
+        /// </summary>
+        [Test]
+        public async Task GetAllBarsWithBeers_NoBars_ReturnsNotFound()
+        {
+            var emptyBarList = new List<BarModel>();
+
+            _mockBarProcess.Setup(u => u.GetAllBarsWithBeers()).ReturnsAsync(emptyBarList);
+
+            var result = await _controller.GetAllBarsWithBeers();
+
+            Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        /// <summary>
         /// Tests creating a bar returns CreatedAtActionResult with the new BarDto.
         /// </summary>
         [Test]
@@ -96,6 +176,31 @@ namespace BeerBarBrewery.Tests.Controller
 
             Assert.That(createdDto?.Name, Is.EqualTo("New Bar"));
             Assert.That(createdDto?.Id, Is.EqualTo(1));
+        }
+
+        /// <summary>
+        /// Tests CreateBar returns BadRequest when request is null.
+        /// </summary>
+        [Test]
+        public async Task CreateBar_NullRequest_ReturnsBadRequest()
+        {
+            var result = await _controller.CreateBar(null);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests CreateBar returns BadRequest when model state is invalid.
+        /// </summary>
+        [Test]
+        public async Task CreateBar_InvalidModelState_ReturnsBadRequest()
+        {
+            var createBarRequest = new CreateBarRequest { Name = "" };
+            _controller.ModelState.AddModelError("Name", "Name is required");
+
+            var result = await _controller.CreateBar(createBarRequest);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         /// <summary>
@@ -144,6 +249,30 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
+        /// Tests UpdateBar returns BadRequest for invalid ID.
+        /// </summary>
+        [Test]
+        public async Task UpdateBar_InvalidId_ReturnsBadRequest()
+        {
+            var updateBarRequest = new CreateBarRequest { Name = "Updated Bar" };
+
+            var result = await _controller.UpdateBar(0, updateBarRequest);
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests UpdateBar returns BadRequest when request is null.
+        /// </summary>
+        [Test]
+        public async Task UpdateBar_NullRequest_ReturnsBadRequest()
+        {
+            var result = await _controller.UpdateBar(1, null);
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
         /// Tests deleting an existing bar returns NoContent.
         /// </summary>
         [Test]
@@ -174,6 +303,17 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
+        /// Tests DeleteBar returns BadRequest for invalid ID.
+        /// </summary>
+        [Test]
+        public async Task DeleteBar_InvalidId_ReturnsBadRequest()
+        {
+            var result = await _controller.DeleteBar(0);
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
         /// Tests assigning a beer to a bar returns Ok if successful.
         /// </summary>
         [Test]
@@ -182,7 +322,7 @@ namespace BeerBarBrewery.Tests.Controller
             int barId = 1, beerId = 10;
             var barBeerLinkDto = new BarBeerRequest { BarId = barId, BeerId = beerId };
 
-            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(true);
+            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(AssignmentResult.Success);
 
             var result = await _controller.AssignBeerToBar(barBeerLinkDto);
 
@@ -206,7 +346,7 @@ namespace BeerBarBrewery.Tests.Controller
             int barId = 999, beerId = 10;
             var barBeerLinkDto = new BarBeerRequest { BarId = barId, BeerId = beerId };
 
-            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(false);
+            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(AssignmentResult.NotFound);
 
             var result = await _controller.AssignBeerToBar(barBeerLinkDto);
             // Cast result to ObjectResult
@@ -227,7 +367,7 @@ namespace BeerBarBrewery.Tests.Controller
             int barId = 1, beerId = 999;
             var barBeerLinkDto = new BarBeerRequest { BarId = barId, BeerId = beerId };
 
-            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(false);
+            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(AssignmentResult.NotFound);
 
             var result = await _controller.AssignBeerToBar(barBeerLinkDto);
 
@@ -235,7 +375,7 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
-        /// Tests assigning a beer that is already assigned to a bar returns Ok (idempotent operation).
+        /// Tests assigning a beer that is already assigned to a bar returns Ok with appropriate message.
         /// </summary>
         [Test]
         public async Task AssignBeerToBar_BeerAlreadyAssigned_ReturnsOk()
@@ -243,7 +383,7 @@ namespace BeerBarBrewery.Tests.Controller
             int barId = 1, beerId = 10;
             var barBeerLinkDto = new BarBeerRequest { BarId = barId, BeerId = beerId };
 
-            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(true);
+            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(AssignmentResult.AlreadyExists);
 
             var result = await _controller.AssignBeerToBar(barBeerLinkDto);
 
@@ -254,7 +394,7 @@ namespace BeerBarBrewery.Tests.Controller
             var response = okResult.Value;
             var messageProp = response?.GetType().GetProperty("message")?.GetValue(response)?.ToString();
 
-            Assert.That(messageProp, Is.EqualTo("Beer assigned to bar successfully."));
+            Assert.That(messageProp, Is.EqualTo("Beer already assigned to bar."));
         }
 
         /// <summary>
@@ -312,6 +452,33 @@ namespace BeerBarBrewery.Tests.Controller
             Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
             var okResult = result.Result as OkObjectResult;
             Assert.That(okResult?.Value, Is.EqualTo(beerDto));
+        }
+
+        /// <summary>
+        /// Tests GetBeersServedAtBar returns BadRequest for invalid bar ID.
+        /// </summary>
+        [Test]
+        public async Task GetBeersServedAtBar_InvalidBarId_ReturnsBadRequest()
+        {
+            var result = await _controller.GetBeersServedAtBar(0);
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests GetBeersServedAtBar returns NotFound when no beers found for bar.
+        /// </summary>
+        [Test]
+        public async Task GetBeersServedAtBar_NoBeersFound_ReturnsNotFound()
+        {
+            int barId = 1;
+            var emptyBeerList = new List<BeerModel>();
+
+            _mockBarProcess.Setup(u => u.GetBeersServedAtBarAsync(barId)).ReturnsAsync(emptyBeerList);
+
+            var result = await _controller.GetBeersServedAtBar(barId);
+
+            Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
         }
     }
 }
