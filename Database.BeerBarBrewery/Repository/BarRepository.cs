@@ -70,7 +70,8 @@ namespace Database.BeerBarBrewery.Repository
         /// </summary>
         /// <param name="barId">The ID of the bar.</param>
         /// <param name="beerId">The ID of the beer to assign.</param>
-        public async Task AssignBeerAsync(int barId, int beerId)
+        /// <returns>True if new relationship created, false if already exists.</returns>
+        public async Task<bool> AssignBeerAsync(int barId, int beerId)
         {
             // Check if the beer is already assigned to the bar
             var exists = await _context.BarBeers
@@ -80,7 +81,9 @@ namespace Database.BeerBarBrewery.Repository
             {
                 // Create new association if it doesn't exist
                 await _context.BarBeers.AddAsync(new BarBeer { BarId = barId, BeerId = beerId });
+                return true;
             }
+            return false;
         }
 
         /// <summary>

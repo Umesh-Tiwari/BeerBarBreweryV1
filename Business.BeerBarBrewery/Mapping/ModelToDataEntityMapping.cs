@@ -36,7 +36,6 @@ namespace Business.BeerBarBrewery.Mapping
             
             //BreweryBeer mappings
             CreateMap<BreweryBeerModel, BreweryBeer>().ReverseMap();
-            
         }
     }
 }

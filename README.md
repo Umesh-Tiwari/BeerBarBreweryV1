@@ -161,7 +161,9 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
   "beerId": 0
 }
 ```
-- **Success Response**: `200 OK` with success message
+- **Success Responses**: 
+  - `200 OK` - "Beer assigned to brewery successfully." (new relationship)
+  - `200 OK` - "Beer already assigned to brewery." (existing relationship)
 - **Error Responses**:
   - `400 Bad Request` - Invalid data
   - `404 Not Found` - Brewery or beer not found
@@ -240,7 +242,9 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
   "beerId": 0
 }
 ```
-- **Success Response**: `200 OK` with success message
+- **Success Responses**: 
+  - `200 OK` - "Beer assigned to bar successfully." (new relationship)
+  - `200 OK` - "Beer already assigned to bar." (existing relationship)
 - **Error Responses**:
   - `400 Bad Request` - Invalid data
   - `404 Not Found` - Bar or beer not found
@@ -298,4 +302,5 @@ dotnet test
 - IDs must be positive integers (> 0)
 - Comprehensive error handling with meaningful error messages
 - Supports relationships between beers, bars, and breweries
+- **Assignment operations are idempotent** - attempting to assign an existing relationship returns success with appropriate message
 - Built following REST API best practices

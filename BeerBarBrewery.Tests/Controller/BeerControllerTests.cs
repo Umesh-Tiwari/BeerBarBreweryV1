@@ -220,6 +220,58 @@ namespace BeerBarBrewery.Tests.Controller
             Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
+        /// <summary>
+        /// Tests GetBeersByAlcoholVolumeRange returns beers when only minimum parameter is provided.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_OnlyMinimumProvided_ReturnsBeers()
+        {
+            var beerModels = new List<BeerModel>
+            {
+                new BeerModel { Id = 1, Name = "Strong Beer", PercentageAlcoholByVolume = 8.0M }
+            };
+
+            var beerResponses = new List<BeerResponse>
+            {
+                new BeerResponse { Id = 1, Name = "Strong Beer", PercentageAlcoholByVolume = 8.0M }
+            };
+
+            _mockBeerProcess.Setup(x => x.GetBeersByAlcoholVolumeRange(5.0M, null)).ReturnsAsync(beerModels);
+            _mockMapper.Setup(m => m.Map<IEnumerable<BeerResponse>>(beerModels)).Returns(beerResponses);
+
+            var result = await _controller.GetBeersByAlcoholVolumeRange(5.0M, null);
+
+            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
+            var okResult = result.Result as OkObjectResult;
+            Assert.That(okResult?.Value, Is.EqualTo(beerResponses));
+        }
+
+        /// <summary>
+        /// Tests GetBeersByAlcoholVolumeRange returns beers when only maximum parameter is provided.
+        /// </summary>
+        [Test]
+        public async Task GetBeersByAlcoholVolumeRange_OnlyMaximumProvided_ReturnsBeers()
+        {
+            var beerModels = new List<BeerModel>
+            {
+                new BeerModel { Id = 1, Name = "Light Beer", PercentageAlcoholByVolume = 3.0M }
+            };
+
+            var beerResponses = new List<BeerResponse>
+            {
+                new BeerResponse { Id = 1, Name = "Light Beer", PercentageAlcoholByVolume = 3.0M }
+            };
+
+            _mockBeerProcess.Setup(x => x.GetBeersByAlcoholVolumeRange(null, 4.0M)).ReturnsAsync(beerModels);
+            _mockMapper.Setup(m => m.Map<IEnumerable<BeerResponse>>(beerModels)).Returns(beerResponses);
+
+            var result = await _controller.GetBeersByAlcoholVolumeRange(null, 4.0M);
+
+            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
+            var okResult = result.Result as OkObjectResult;
+            Assert.That(okResult?.Value, Is.EqualTo(beerResponses));
+        }
+
         #endregion
 
         #region CreateBeer Tests

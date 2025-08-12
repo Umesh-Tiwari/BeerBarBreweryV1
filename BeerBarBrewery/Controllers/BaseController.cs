@@ -32,36 +32,5 @@ namespace BeerBarBrewery.Controllers
                 StatusCode = statusCode
             };
         }
-
-        /// <summary>
-        /// Creates an ActionResult with error response and specified status code.
-        /// </summary>
-        /// <param name="message">The error message.</param>
-        /// <param name="statusCode">The HTTP status code (default: 400).</param>
-        /// <returns>An ActionResult with the error response.</returns>
-        protected ActionResult ErrorResponseActionResult(string message, int statusCode = 400)
-        {
-            return StatusCode(statusCode, new { error = message });
-        }
-
-        /// <summary>
-        /// Creates a standardized NotFound (404) response with error message.
-        /// </summary>
-        /// <param name="message">The error message to include.</param>
-        /// <returns>A NotFound ActionResult with the error message.</returns>
-        protected IActionResult NotFoundResponse(string message)
-        {
-            return NotFound(new { error = message });
-        }
-
-        /// <summary>
-        /// Creates a standardized NotFound (404) action response with error message.
-        /// </summary>
-        /// <param name="message">The error message to include.</param>
-        /// <returns>A NotFound ActionResult with the error message.</returns>
-        protected IActionResult NotFoundActionResponse(string message)
-        {
-            return NotFound(new { error = message });
-        }
     }
 }

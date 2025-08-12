@@ -12,8 +12,8 @@ namespace Business.BeerBarBrewery.Process.Interface
         /// Links an existing beer to a specified bar.
         /// </summary>
         /// <param name="barBeerLinkDto">DTO containing BarId and BeerId for linking.</param>
-        /// <returns>True if link is successful; false if bar or beer not found.</returns>
-        Task<bool> LinkBarToBeer(BarBeerRequest barBeerLinkDto);
+        /// <returns>AssignmentResult indicating success, already exists, or not found.</returns>
+        Task<AssignmentResult> LinkBarToBeer(BarBeerRequest barBeerLinkDto);
 
         /// <summary>
         /// Retrieves all beers served at a specified bar.

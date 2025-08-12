@@ -74,5 +74,4 @@ namespace BeerBarBrewery.Middleware
             return context.Response.WriteAsync(json);
         }
     }
-
 }

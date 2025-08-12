@@ -112,11 +112,14 @@ namespace BeerBarBrewery.Controllers
                 return BadRequest(ErrorResponse("Invalid BarId or BeerId.", StatusCodes.Status400BadRequest));
 
             var result = await _barProcess.LinkBarToBeer(barBeerRequest);
-            if (!result)
-                return NotFound(ErrorResponse($"Bar with ID {barBeerRequest.BarId} or Beer with ID {barBeerRequest.BeerId} " +
-                    $"not found.", StatusCodes.Status404NotFound));
-
-            return Ok(new { message = "Beer assigned to bar successfully." });
+            
+            return result switch
+            {
+                AssignmentResult.Success => Ok(new { message = "Beer assigned to bar successfully." }),
+                AssignmentResult.AlreadyExists => Ok(new { message = "Beer already assigned to bar." }),
+                AssignmentResult.NotFound => NotFound(ErrorResponse($"Bar with ID {barBeerRequest.BarId} or Beer with ID {barBeerRequest.BeerId} not found.", StatusCodes.Status404NotFound)),
+                _ => BadRequest(ErrorResponse("Unknown error occurred.", StatusCodes.Status400BadRequest))
+            };
         }
 
         /// <summary>

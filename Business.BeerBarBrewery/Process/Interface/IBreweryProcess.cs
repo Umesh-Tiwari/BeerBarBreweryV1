@@ -45,8 +45,8 @@ namespace Business.BeerBarBrewery.Process.Interface
         /// Links an existing beer to a specific brewery.
         /// </summary>
         /// <param name="breweryBeerModel">Model containing BreweryId and BeerId for linking.</param>
-        /// <returns>True if the link is successful; false if brewery or beer not found.</returns>
-        Task<bool> AssignBeerToBrewery(BreweryBeerModel breweryBeerModel);
+        /// <returns>AssignmentResult indicating success, already exists, or not found.</returns>
+        Task<AssignmentResult> AssignBeerToBrewery(BreweryBeerModel breweryBeerModel);
 
         /// <summary>
         /// Deletes a brewery identified by its ID.
