@@ -22,14 +22,6 @@ namespace Database.BeerBarBrewery.Repository
         }
 
         /// <summary>
-        /// Retrieves all beers from the database.
-        /// </summary>
-        public async Task<IEnumerable<Beer>> GetAllAsync()
-        {
-            return await _context.Beers.ToListAsync();
-        }
-
-        /// <summary>
         /// Retrieves a specific beer by its unique identifier.
         /// </summary>
         /// <param name="id">The ID of the beer to retrieve.</param>

@@ -29,13 +29,6 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
 
 ### 🍺 Beer Management
 
-#### Get All Beers
-- **GET** `/api/beer`
-- **Description**: Retrieves all beer records
-- **Response**: List of beer details or 404 if no beers found
-- **Success Response**: `200 OK` with `BeerResponse[]`
-- **Error Response**: `404 Not Found` with error message
-
 #### Get Beer by ID
 - **GET** `/api/beer/{id}`
 - **Description**: Retrieves a specific beer by its ID
@@ -46,15 +39,15 @@ A comprehensive RESTful API for managing beers, bars, and breweries with their r
   - `404 Not Found` - Beer not found
 
 #### Get Beers by Alcohol Volume Range
-- **GET** `/api/beer/BeerByRange?gtAlcoholByVolume={min}&ltAlcoholByVolume={max}`
-- **Description**: Retrieves beers within specified ABV range
+- **GET** `/api/beer?gtAlcoholByVolume={min}&ltAlcoholByVolume={max}`
+- **Description**: Retrieves beers within specified ABV range (at least one parameter required)
 - **Parameters**: 
-  - `gtAlcoholByVolume` (double) - Minimum ABV (exclusive)
-  - `ltAlcoholByVolume` (double) - Maximum ABV (exclusive)
+  - `gtAlcoholByVolume` (decimal, optional) - Minimum ABV (exclusive, must be ≥ 0)
+  - `ltAlcoholByVolume` (decimal, optional) - Maximum ABV (exclusive, must be ≥ 0)
 - **Success Response**: `200 OK` with `BeerResponse[]`
 - **Error Responses**:
-  - `400 Bad Request` - Invalid ABV values
-  - `404 Not Found` - No beers in range
+  - `400 Bad Request` - Invalid ABV values or no parameters provided
+  - `404 Not Found` - No beers found matching criteria
 
 #### Create Beer
 - **POST** `/api/beer`

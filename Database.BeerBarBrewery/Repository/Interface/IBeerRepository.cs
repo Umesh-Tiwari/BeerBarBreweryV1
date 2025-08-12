@@ -9,12 +9,6 @@ namespace Database.BeerBarBrewery.Repository.Interface
     public interface IBeerRepository
     {
         /// <summary>
-        /// Retrieves all beers from the data source.
-        /// </summary>
-        /// <returns>A collection of all beers.</returns>
-        Task<IEnumerable<Beer>> GetAllAsync();
-
-        /// <summary>
         /// Retrieves a specific beer by its unique identifier.
         /// </summary>
         /// <param name="id">The ID of the beer to retrieve.</param>

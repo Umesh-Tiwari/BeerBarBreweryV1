@@ -35,25 +35,6 @@ namespace BeerBarBrewery.Controllers
         }
 
         /// <summary>
-        /// Retrieves all beer records. Returns a NotFound response with an error message if no records are found.
-        /// </summary>
-        /// <returns>
-        /// An OK response containing a list of beer details if records are present,  
-        /// or a NotFound response if no records exist.
-        /// </returns>
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<BeerResponse>>> GetAllBeers()
-        {
-            var beerModels = await _beerProcess.GetAllBeers();
-            if(!beerModels.Any())
-                return NotFound(ErrorResponse("Beer data not found.", StatusCodes.Status404NotFound));
-
-            return Ok(_mapper.Map<IEnumerable<BeerResponse>>(beerModels));
-        }
-
-        /// <summary>
         /// Retrieves a specific beer by its ID.
         /// </summary>
         /// <param name="id">
@@ -94,7 +75,7 @@ namespace BeerBarBrewery.Controllers
         /// - A BadRequest response if the ABV values are invalid or both parameters are missing.  
         /// - A NotFound response if no beers are found matching the criteria.
         /// </returns>
-        [HttpGet("BeerByRange")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<BeerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]

@@ -8,12 +8,6 @@ namespace Business.BeerBarBrewery.Process.Interface
     public interface IBeerProcess
     {
         /// <summary>
-        /// Retrieves all beers from the system.
-        /// </summary>
-        /// <returns>A list of all beers.</returns>
-        Task<IEnumerable<BeerModel>> GetAllBeers();
-
-        /// <summary>
         /// Retrieves a specific beer by its unique ID.
         /// </summary>
         /// <param name="id">The ID of the beer to retrieve.</param>
