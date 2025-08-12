@@ -28,53 +28,6 @@ namespace BeerBarBrewery.Tests.Controller
             _controller = new BeerController(_mockBeerProcess.Object, _mockMapper.Object);
         }
 
-        #region GetAllBeers Tests
-
-        /// <summary>
-        /// Tests that GetAllBeers returns OkObjectResult with a list of BeerResponse when beers exist.
-        /// </summary>
-        [Test]
-        public async Task GetAllBeers_ReturnsOkWithBeerResponses()
-        {
-            var beerModels = new List<BeerModel>
-            {
-                new BeerModel { Id = 1, Name = "Beer One", PercentageAlcoholByVolume = 5.0M },
-                new BeerModel { Id = 2, Name = "Beer Two", PercentageAlcoholByVolume = 4.5M }
-            };
-
-            var beerResponses = new List<BeerResponse>
-            {
-                new BeerResponse { Id = 1, Name = "Beer One", PercentageAlcoholByVolume = 5.0M },
-                new BeerResponse { Id = 2, Name = "Beer Two", PercentageAlcoholByVolume = 4.5M }
-            };
-
-            _mockBeerProcess.Setup(x => x.GetAllBeers()).ReturnsAsync(beerModels);
-            _mockMapper.Setup(m => m.Map<IEnumerable<BeerResponse>>(beerModels)).Returns(beerResponses);
-
-            var result = await _controller.GetAllBeers();
-
-            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
-            var okResult = result.Result as OkObjectResult;
-            Assert.That(okResult?.Value, Is.EqualTo(beerResponses));
-        }
-
-        /// <summary>
-        /// Tests that GetAllBeers returns NotFound when no beers exist.
-        /// </summary>
-        [Test]
-        public async Task GetAllBeers_NoBeers_ReturnsNotFound()
-        {
-            var emptyBeerList = new List<BeerModel>();
-
-            _mockBeerProcess.Setup(x => x.GetAllBeers()).ReturnsAsync(emptyBeerList);
-
-            var result = await _controller.GetAllBeers();
-
-            Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
-        }
-
-        #endregion
-
         #region GetBeerById Tests
 
         /// <summary>

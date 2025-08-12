@@ -58,23 +58,6 @@ namespace BeerBarBrewery.Tests.Repository
         }
 
         /// <summary>
-        /// Verifies GetAllAsync returns all beers present in the database.
-        /// </summary>
-        [Test]
-        public async Task GetAllAsync_ReturnsAllBeers()
-        {
-            _context.Beers.AddRange(
-                new Beer { Name = "Beer A", PercentageAlcoholByVolume = 4.5M },
-                new Beer { Name = "Beer B", PercentageAlcoholByVolume = 6.0M }
-            );
-            await _context.SaveChangesAsync();
-
-            var result = await _repository.GetAllAsync();
-
-            Assert.That(result.Count(), Is.EqualTo(2));
-        }
-
-        /// <summary>
         /// Verifies GetByIdAsync returns the correct beer for a valid ID.
         /// </summary>
         [Test]

@@ -25,20 +25,6 @@ namespace Business.BeerBarBrewery.Process
         }
 
         /// <summary>
-        /// Retrieves all beers in the system.
-        /// </summary>
-        /// <returns>List of beer models.</returns>
-        public async Task<IEnumerable<BeerModel>> GetAllBeers()
-        {
-            var beers = await _beerRepository.GetAllAsync();
-            if (beers == null)
-            {
-                return Enumerable.Empty<BeerModel>();
-            }
-            return _mapper.Map<IEnumerable<BeerModel>>(beers);
-        }
-
-        /// <summary>
         /// Retrieves a specific beer by its ID.
         /// </summary>
         /// <param name="id">Beer ID to retrieve.</param>

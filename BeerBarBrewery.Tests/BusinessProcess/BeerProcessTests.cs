@@ -25,34 +25,6 @@ namespace BeerBarBrewery.Tests.BusinessProcess
             _beerProcess = new BeerProcess(_mockBeerRepository.Object, _mockMapper.Object);
         }
 
-        #region GetAllBeers Tests
-
-        [Test]
-        public async Task GetAllBeers_ReturnsBeers_WhenBeersExist()
-        {
-            var beerEntities = new List<Beer> { new Beer { Id = 1, Name = "Test Beer" } };
-            var beerModels = new List<BeerModel> { new BeerModel { Id = 1, Name = "Test Beer" } };
-
-            _mockBeerRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(beerEntities);
-            _mockMapper.Setup(x => x.Map<IEnumerable<BeerModel>>(beerEntities)).Returns(beerModels);
-
-            var result = await _beerProcess.GetAllBeers();
-
-            Assert.That(result, Is.EqualTo(beerModels));
-        }
-
-        [Test]
-        public async Task GetAllBeers_ReturnsEmpty_WhenNoBeersExist()
-        {
-            _mockBeerRepository.Setup(x => x.GetAllAsync()).ReturnsAsync((IEnumerable<Beer>)null);
-
-            var result = await _beerProcess.GetAllBeers();
-
-            Assert.That(result, Is.Empty);
-        }
-
-        #endregion
-
         #region GetBeerById Tests
 
         [Test]
