@@ -19,7 +19,5 @@
         /// Alcohol content represented as a percentage (ABV - Alcohol by Volume).
         /// </summary>
         public decimal PercentageAlcoholByVolume { get; set; }
-
-
     }
 }

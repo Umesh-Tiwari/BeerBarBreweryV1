@@ -21,7 +21,5 @@ namespace Contract.BeerBarBrewery
         [Required(ErrorMessage = "Alcohol content is required.")]
         [Range(0.1, 100.0, ErrorMessage = "Alcohol content must be between 0.1% and 100%.")]
         public decimal PercentageAlcoholByVolume { get; set; }
-
-
     }
 }

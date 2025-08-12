@@ -20,8 +20,5 @@
         /// Alcohol content of the beer, expressed as a percentage (e.g., 5.5%).
         /// </summary>
         public decimal PercentageAlcoholByVolume { get; set; }
-
-
     }
-
 }

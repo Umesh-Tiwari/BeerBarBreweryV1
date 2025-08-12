@@ -20,7 +20,5 @@ namespace Model.BeerBarBrewery
         /// </summary>
         [Range(0, 100, ErrorMessage = "Alcohol percentage must be between 0 and 100.")]
         public decimal PercentageAlcoholByVolume { get; set; }
-
-
     }
 }
