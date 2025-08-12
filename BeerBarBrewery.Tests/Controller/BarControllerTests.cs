@@ -235,6 +235,66 @@ namespace BeerBarBrewery.Tests.Controller
         }
 
         /// <summary>
+        /// Tests assigning a beer that is already assigned to a bar returns Ok (idempotent operation).
+        /// </summary>
+        [Test]
+        public async Task AssignBeerToBar_BeerAlreadyAssigned_ReturnsOk()
+        {
+            int barId = 1, beerId = 10;
+            var barBeerLinkDto = new BarBeerRequest { BarId = barId, BeerId = beerId };
+
+            _mockBarProcess.Setup(u => u.LinkBarToBeer(barBeerLinkDto)).ReturnsAsync(true);
+
+            var result = await _controller.AssignBeerToBar(barBeerLinkDto);
+
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var okResult = result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+
+            var response = okResult.Value;
+            var messageProp = response?.GetType().GetProperty("message")?.GetValue(response)?.ToString();
+
+            Assert.That(messageProp, Is.EqualTo("Beer assigned to bar successfully."));
+        }
+
+        /// <summary>
+        /// Tests AssignBeerToBar returns BadRequest when request is null.
+        /// </summary>
+        [Test]
+        public async Task AssignBeerToBar_NullRequest_ReturnsBadRequest()
+        {
+            var result = await _controller.AssignBeerToBar(null);
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests AssignBeerToBar returns BadRequest for invalid bar ID.
+        /// </summary>
+        [Test]
+        public async Task AssignBeerToBar_InvalidBarId_ReturnsBadRequest()
+        {
+            var barBeerRequest = new BarBeerRequest { BarId = 0, BeerId = 1 };
+
+            var result = await _controller.AssignBeerToBar(barBeerRequest);
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
+        /// Tests AssignBeerToBar returns BadRequest for invalid beer ID.
+        /// </summary>
+        [Test]
+        public async Task AssignBeerToBar_InvalidBeerId_ReturnsBadRequest()
+        {
+            var barBeerRequest = new BarBeerRequest { BarId = 1, BeerId = 0 };
+
+            var result = await _controller.AssignBeerToBar(barBeerRequest);
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        /// <summary>
         /// Tests getting beers served at a specific bar returns a list of BeerDto.
         /// </summary>
         [Test]
